@@ -1,0 +1,1 @@
+exports.dayToFrenchName = (dayIndex) => ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi',][dayIndex];
