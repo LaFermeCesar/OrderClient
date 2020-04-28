@@ -47,18 +47,8 @@ class LoginPage extends Component {
             phoneNumber: '',
             lastName: '',
             firstName: '',
-            errors: {},
         }
 
-    }
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.UI.errors !== prevState.errors) {
-            return {
-                errors: nextProps.UI.errors
-            }
-        }
-        return null
     }
 
 
@@ -79,8 +69,8 @@ class LoginPage extends Component {
     };
 
     render() {
-        const {classes, UI: {loading}} = this.props;
-        const {errors} = this.state;
+        const {classes, UI: {loading, errors}} = this.props;
+        // const {errors} = this.state;
 
         return (
             <Grid container className={classes.form}>
@@ -124,9 +114,22 @@ class LoginPage extends Component {
                             fullWidth/>
                         {errors.general && (
                             <Typography variant='body2' className={classes.customError}>
-                                {errors.general}
+                                Ce numéro est déjà associé à une autre paire de prénom/nom
                             </Typography>
                         )}
+                        {(errors.phoneNumber && (
+                            <Typography variant='body2' className={classes.customError}>
+                                Veuillez vérifier le numéro de téléphone
+                            </Typography>
+                        )) || (errors.firstName && (
+                            <Typography variant='body2' className={classes.customError}>
+                                Veuillez vérifier le prénom
+                            </Typography>
+                        )) || (errors.lastName && (
+                            <Typography variant='body2' className={classes.customError}>
+                                Veuillez vérifier le nom
+                            </Typography>
+                        ))}
                         <Button
                             className={classes.button}
                             type='submit'
