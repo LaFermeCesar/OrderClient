@@ -114,8 +114,7 @@ class OrderPage extends Component {
         http.post('/order', this.state.order)
             .then(() => {
                 const dayDif = new SwissDate(this.state.order.locationDate).dayDifference(SwissDate.now())
-                console.log(dayDif, 'day difference');
-                if (dayDif > (2 + this.state.order.location.isMarket)) {
+                if (dayDif >= (2 + this.state.order.location.isMarket)) {
                     this.setState({
                         orderInTime: true,
                     });

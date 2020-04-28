@@ -12,6 +12,7 @@ import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import AppLogo from '../images/logo.png';
+import Container from "@material-ui/core/Container";
 
 const styles = {
     form: {
@@ -73,79 +74,82 @@ class LoginPage extends Component {
         // const {errors} = this.state;
 
         return (
-            <Grid container className={classes.form}>
-                <Grid item sm/>
-                <Grid item sm>
-                    <img className={classes.image} src={AppLogo} alt='company logo'/>
-                    <Typography variant='h5'>Commande de pain et miel en ligne</Typography>
-                    <form noValidate onSubmit={this.handleSubmit}>
-                        <TextField
-                            className={classes.textField}
-                            variant='outlined'
-                            id='phoneNumber'
-                            name='phoneNumber'
-                            label='Numéro de téléphone'
-                            value={this.state.phoneNumber}
-                            onChange={this.handleChange}
-                            // helperText={errors.phoneNumber}
-                            error={!!errors.phoneNumber}
-                            fullWidth/>
-                        <TextField
-                            className={classes.textField}
-                            variant='outlined'
-                            id='firstName'
-                            name='firstName'
-                            label='Prénom'
-                            value={this.state.firstName}
-                            onChange={this.handleChange}
-                            // helperText={errors.name}
-                            error={!!errors.firstName}
-                            fullWidth/>
-                        <TextField
-                            className={classes.textField}
-                            variant='outlined'
-                            id='lastName'
-                            name='lastName'
-                            label='Nom de famille'
-                            value={this.state.lastName}
-                            onChange={this.handleChange}
-                            // helperText={errors.name}
-                            error={!!errors.lastName}
-                            fullWidth/>
-                        {errors.general && (
-                            <Typography variant='body2' className={classes.customError}>
-                                {errors.general}. Vérifiez les valeurs entrées.
-                            </Typography>
-                        )}
-                        {(errors.phoneNumber && (
-                            <Typography variant='body2' className={classes.customError}>
-                                Le numéro de téléphone est invalide
-                            </Typography>
-                        )) || (errors.firstName && (
-                            <Typography variant='body2' className={classes.customError}>
-                                Le prénom est invalide
-                            </Typography>
-                        )) || (errors.lastName && (
-                            <Typography variant='body2' className={classes.customError}>
-                                Le nom est invalide
-                            </Typography>
-                        ))}
-                        <Button
-                            className={classes.button}
-                            type='submit'
-                            variant='contained'
-                            color='primary'
-                            disabled={loading}
-                        >
-                            Suivant
-                            {loading && (
-                                <CircularProgress className={classes.progress} size={30}/>
+            <Container>
+                <form noValidate onSubmit={this.handleSubmit}>
+                    <Grid container spacing={3} className={classes.form}>
+                        <Grid item sm/>
+                        <Grid item sm>
+                            <img className={classes.image} src={AppLogo} alt='company logo'/>
+                            <Typography variant='h5'>Commande de pain et miel en ligne</Typography>
+
+                            <TextField
+                                className={classes.textField}
+                                variant='outlined'
+                                id='phoneNumber'
+                                name='phoneNumber'
+                                label='Numéro de téléphone'
+                                value={this.state.phoneNumber}
+                                onChange={this.handleChange}
+                                // helperText={errors.phoneNumber}
+                                error={!!errors.phoneNumber}
+                                fullWidth/>
+                            <TextField
+                                className={classes.textField}
+                                variant='outlined'
+                                id='firstName'
+                                name='firstName'
+                                label='Prénom'
+                                value={this.state.firstName}
+                                onChange={this.handleChange}
+                                // helperText={errors.name}
+                                error={!!errors.firstName}
+                                fullWidth/>
+                            <TextField
+                                className={classes.textField}
+                                variant='outlined'
+                                id='lastName'
+                                name='lastName'
+                                label='Nom de famille'
+                                value={this.state.lastName}
+                                onChange={this.handleChange}
+                                // helperText={errors.name}
+                                error={!!errors.lastName}
+                                fullWidth/>
+                            {errors.general && (
+                                <Typography variant='body2' className={classes.customError}>
+                                    {errors.general}. Vérifiez les valeurs entrées.
+                                </Typography>
                             )}
-                        </Button>
-                    </form>
-                </Grid>
-                <Grid item sm/>
-            </Grid>
+                            {(errors.phoneNumber && (
+                                <Typography variant='body2' className={classes.customError}>
+                                    Le numéro de téléphone est invalide
+                                </Typography>
+                            )) || (errors.firstName && (
+                                <Typography variant='body2' className={classes.customError}>
+                                    Le prénom est invalide
+                                </Typography>
+                            )) || (errors.lastName && (
+                                <Typography variant='body2' className={classes.customError}>
+                                    Le nom est invalide
+                                </Typography>
+                            ))}
+                            <Button
+                                className={classes.button}
+                                type='submit'
+                                variant='contained'
+                                color='primary'
+                                disabled={loading}
+                            >
+                                Suivant
+                                {loading && (
+                                    <CircularProgress className={classes.progress} size={30}/>
+                                )}
+                            </Button>
+                        </Grid>
+                        <Grid item sm/>
+                    </Grid>
+                </form>
+            </Container>
         );
     }
 }
