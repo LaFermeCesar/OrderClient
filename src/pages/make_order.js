@@ -12,7 +12,6 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import AddIcon from '@material-ui/icons/Add';
 import SendIcon from '@material-ui/icons/Send';
 import ClearIcon from '@material-ui/icons/Clear';
-import axios from 'axios'
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Dialog from "@material-ui/core/Dialog";
@@ -22,10 +21,17 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import SwissDate from "../util/swiss_date";
+import Container from "@material-ui/core/Container";
+
+import http from '../util/http'
 
 const styles = {
     form: {
         paddingBottom: 20,
+    },
+    gridContainer: {
+        margin: 'auto',
+        maxWidth: 720,
     },
     fieldContainer: {
         margin: 'auto',
@@ -50,12 +56,14 @@ const styles = {
     }
 };
 
+const DEFAULT_DAYS_OF_WEEK = [2, 3, 5, 6]
+
 class OrderPage extends Component {
 
     constructor(props) {
         super(props);
 
-        const defaultDaysOfWeek = [2, 3, 5, 6];
+        let daysOfWeek = DEFAULT_DAYS_OF_WEEK;
         const order = props.location.order;
 
         if (order) {
@@ -64,16 +72,17 @@ class OrderPage extends Component {
                 ...breadOrder,
                 bread: props.data.idToBread[breadOrder.breadID]
             }))
+            daysOfWeek = order.location.daysOfWeek;
         }
 
         this.state = {
             order: {
-                locationDate: SwissDate.now().plus(1).next(defaultDaysOfWeek).string,
+                locationDate: SwissDate.now().plus(1).next(daysOfWeek).string,
                 locationID: '',
                 location: {
                     name: '',
                     isMarket: false,
-                    daysOfWeek: defaultDaysOfWeek,
+                    daysOfWeek: daysOfWeek,
                 },
                 breadList: [this.newBreadOrder()],
                 ...order,
@@ -84,7 +93,7 @@ class OrderPage extends Component {
             orderInTime: undefined,
             showDeleteAlert: false,
         };
-    }
+    };
 
     newBreadOrder = () => ({
         breadID: '',
@@ -101,7 +110,7 @@ class OrderPage extends Component {
         this.setState({
             loading: true,
         });
-        axios.post('/order', this.state.order)
+        http.post('/order', this.state.order)
             .then((res) => {
                 const dayDif = new SwissDate(this.state.order.locationDate).dayDifference(SwissDate.now())
                 console.log(dayDif, 'day difference');
@@ -138,7 +147,7 @@ class OrderPage extends Component {
         this.setState({
             loading: true,
         });
-        axios.post('/delete_order', {orderID: this.state.order.orderID})
+        http.post('/delete_order', {orderID: this.state.order.orderID})
             .then(() => {
                 this.props.history.push('');
                 window.location.reload(false);
@@ -300,9 +309,9 @@ class OrderPage extends Component {
         // };
 
         return (
-            <div>
+            <Container>
                 <form noValidate className={classes.form} onSubmit={this.handleSubmit}>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} className={classes.gridContainer}>
                         <Grid className={classes.fieldContainer} item sm={6} xs={12}>
                             <Select
                                 variant='outlined'
@@ -333,8 +342,6 @@ class OrderPage extends Component {
                                 fullWidth
                             />
                         </Grid>
-
-
                         {this.state.order.breadList.map((breadOrder, index) => {
                             return (
                                 <Fragment key={index}>
@@ -353,16 +360,11 @@ class OrderPage extends Component {
                                                 <em>Choisissez votre pain</em>
                                             </MenuItem>
 
-                                            {breads
-                                                .filter((b) => !this.state.order.breadList
-                                                    .filter(b => b.breadID !== breadOrder.breadID)
-                                                    .map(breadOrder => breadOrder.breadID)
-                                                    .includes(b.breadID))
-                                                .map(b => (
-                                                    <MenuItem key={b.breadID} value={b.breadID}>
-                                                        {b.name}
-                                                    </MenuItem>)
-                                                )}
+                                            {breads.map(b => (
+                                                <MenuItem key={b.breadID} value={b.breadID}>
+                                                    {b.name}
+                                                </MenuItem>)
+                                            )}
                                         </Select>
                                     </Grid>
                                     <Grid className={classes.fieldContainer} item sm={4} xs={10}>
@@ -452,7 +454,6 @@ class OrderPage extends Component {
                                 </Button>
                             </Grid>) : ''}
                     </Grid>
-
                 </form>
 
                 {this.state.loading && (
@@ -481,7 +482,6 @@ class OrderPage extends Component {
                     </DialogActions>
                 </Dialog>
 
-
                 <Dialog
                     open={this.state.showDeleteAlert}
                 >
@@ -502,7 +502,7 @@ class OrderPage extends Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-            </div>
+            </Container>
         );
     }
 }

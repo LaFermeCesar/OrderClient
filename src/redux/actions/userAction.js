@@ -1,4 +1,5 @@
-import axios from "axios";
+import http from '../../util/http'
+
 import {
     CLEAR_ERRORS,
     LOADING_UI,
@@ -11,16 +12,16 @@ import {
 } from '../types'
 
 export const loginUser = (userData, history) => (dispatch) => {
-
     dispatch({type: LOADING_UI});
 
     let signingIn = false;
 
-    axios.post('/signup', userData)
+    http.post('/signup', userData)
         .catch(err => {
+            console.log(err.response)
             if (err.response.data.phoneNumber === 'already in use') {
                 signingIn = true;
-                return axios.post('/login', userData)
+                return http.post('/login', userData)
             }
             return Promise.reject(err);
         })
@@ -50,8 +51,8 @@ export const loginUser = (userData, history) => (dispatch) => {
 
             const firebaseToken = `Bearer ${res.data.token}`;
             localStorage.setItem('FBToken', firebaseToken);
+            http.setToken(firebaseToken);
 
-            axios.defaults.headers.common['Authorization'] = firebaseToken;
             dispatch({type: SET_AUTHENTICATED});
             dispatch({type: CLEAR_ERRORS});
 
@@ -62,18 +63,19 @@ export const loginUser = (userData, history) => (dispatch) => {
             }
         })
         .catch(err => {
-            console.log(err);
-            if (err.response) {
+            if (err.response.data) {
                 dispatch({
                     type: SET_ERRORS,
                     payload: err.response.data,
                 })
+            } else {
+                console.log(err.response);
             }
         })
 };
 
 export const logoutUser = () => (dispatch) => {
     localStorage.removeItem('FBToken');
-    delete axios.defaults.headers.common['Authorizations'];
+    http.removeToken();
     dispatch({type: SET_UNAUTHENTICATED})
 };

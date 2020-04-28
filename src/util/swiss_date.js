@@ -5,36 +5,31 @@ const DAY = 24 * HOUR;
 
 class SwissDate {
     constructor(stringOrTime) {
-        let date;
-
         if (stringOrTime) {
-            date = new Date(stringOrTime);
+            this._date = new Date(stringOrTime);
         } else {
-            date = new Date();
+            this._date = new Date();
         }
-
-        this._date = SwissDate.fixTzDay(date);
-        this._date.setUTCHours(0, 0, 0, 0); // only the date matters
+        // add two hours because of GMT+2 (in switzerland, at the time of the writing)
+        this._date.setTime(this._date.getTime() + 2 * HOUR)
+        // only the date matters
+        this._date.setUTCHours(0, 0, 0, 0);
     }
 
     get day() {
         return this._date.getUTCDay();
     }
 
+    get month() {
+        return this._date.getUTCMonth();
+    }
+
+    get year() {
+        return this._date.getUTCFullYear();
+    }
+
     get string() {
         return this._date.toISOString();
-    }
-
-    static next = (days) => SwissDate.now().next(days)
-
-    static now = () => {
-        return new SwissDate();
-    }
-
-    static fixTzDay = (date) => { // add two hours because of GMT+2 (in switzerland, at the time of the writing)
-        date = new Date(date)
-        date.setTime(date.getTime() + 2 * HOUR)
-        return date;
     }
 
     dayDifference = (other) => Math.round((this._date.getTime() - other._date.getTime()) / DAY)
@@ -50,6 +45,10 @@ class SwissDate {
         }
         return date;
     }
+
+    static next = (days) => SwissDate.now().next(days)
+
+    static now = () => new SwissDate();
 }
 
 export default SwissDate

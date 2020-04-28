@@ -2,20 +2,26 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types'
 
 import OrderCard from '../components/OrderCard'
-import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 import {connect} from 'react-redux'
 import {getFutureOrders, getPastOrders} from "../redux/actions/dataAction";
-import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const styles = {
-    ordersTitle: {
+    root: {},
+    allOrders: {
         marginBottom: 10,
-    },
-    ordersContainer: {
         margin: 'auto',
+    },
+    ordersTitle: {
+        textAlign: 'center',
+        margin: '10px 0 10px 0',
+    },
+    orderCard: {
+        marginBottom: 5,
     },
 };
 
@@ -32,29 +38,34 @@ class MyOrdersPage extends Component {
         const ordersToMarkup = (orders) => {
             if (orders.length === 0) {
                 if (loading) {
-                    return <Typography variant="body1">chargement en cours...</Typography>
+                    return <LinearProgress/>
                 }
                 return <Typography variant="body1">Aucune commande pour le moment</Typography>
             }
             return orders.map(order =>
-                <OrderCard key={order.orderID} order={order}/>
+                <div className={classes.orderCard} key={order.orderID}>
+                    <OrderCard order={order}/>
+                </div>
             )
         };
 
         return (
-            <Container>
-                <Grid container spacing={3}>
-                    <Grid className={classes.ordersContainer} item sm={8} xs={12}>
-                        <Typography className={classes.ordersTitle} variant='h4'>Commandes en cours</Typography>
+            <Grid container className={classes.root}>
+                <Grid item sm/>
+                <Grid item md className={classes.allOrders}>
+                    <div className={classes.ordersContainer}>
+                        <Typography className={classes.ordersTitle} variant='h5'>Commandes en cours</Typography>
                         {ordersToMarkup(futureOrders)}
-                    </Grid>
-
-                    <Grid className={classes.ordersContainer} item sm={8} xs={12}>
-                        <Typography className={classes.ordersTitle} variant='h4'>Commandes passées</Typography>
-                        {ordersToMarkup(pastOrders)}
-                    </Grid>
+                    </div>
+                    {pastOrders.length !== 0 && (
+                        <div className={classes.ordersContainer}>
+                            <Typography className={classes.ordersTitle} variant='h5'>Commandes passées</Typography>
+                            {ordersToMarkup(pastOrders)}
+                        </div>
+                    )}
                 </Grid>
-            </Container>
+                <Grid item sm/>
+            </Grid>
         );
     }
 }

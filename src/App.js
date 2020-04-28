@@ -9,7 +9,6 @@ import Navbar from "./components/Navbar";
 import PrivateRoute from "./util/PrivateRoute";
 import AdminRoute from "./util/AdminRoute";
 import OnlyPublicRoute from "./util/OnlyPublicRoute";
-import axios from 'axios'
 // Pages
 import home from './pages/my_orders'
 import login from './pages/login'
@@ -25,10 +24,8 @@ import store from './redux/store'
 import {SET_AUTHENTICATED, SET_BREADS, SET_LOCATIONS, SET_USER} from './redux/types'
 import {logoutUser} from "./redux/actions/userAction";
 import DayjsUtils from '@date-io/dayjs';
+import http from "./util/http";
 
-axios.defaults.baseURL = 'https://europe-west1-orders-lfc.cloudfunctions.net/api';
-
-const theme = createMuiTheme(themeFile);
 
 const token = localStorage.FBToken;
 
@@ -36,20 +33,23 @@ if (token) {
     const decodedToken = jwtDecode(token);
     const isAuthenticated = decodedToken.exp * 1000 > Date.now();
     if (isAuthenticated) {
+        http.setToken(token);
         store.dispatch({type: SET_AUTHENTICATED});
+
         store.dispatch({
             type: SET_LOCATIONS,
             payload: JSON.parse(localStorage.idToLoc)
         });
+
         store.dispatch({
             type: SET_BREADS,
             payload: JSON.parse(localStorage.idToBread)
         });
+
         store.dispatch({
             type: SET_USER,
             payload: JSON.parse(localStorage.userDetails)
         });
-        axios.defaults.headers.common['Authorization'] = token;
     } else {
         store.dispatch(logoutUser());
         window.location.href = '/login';
@@ -58,7 +58,7 @@ if (token) {
 
 function App() {
     return (
-        <MuiThemeProvider theme={theme}>
+        <MuiThemeProvider theme={createMuiTheme(themeFile)}>
             <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <Provider store={store}>
                     <div className="App">

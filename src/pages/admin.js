@@ -10,7 +10,7 @@ import {DatePicker} from "@material-ui/pickers";
 import SwissDate from "../util/swiss_date";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import axios from 'axios';
+import http from '../util/http'
 
 const styles = {
     fieldContainer: {
@@ -19,7 +19,7 @@ const styles = {
     },
 };
 
-const MARKET_DAYS = [3, 6];
+const MARKET_DAYS = [6];
 
 class AdminPage extends Component {
 
@@ -42,7 +42,7 @@ class AdminPage extends Component {
     shouldDisableDate = (date) => !MARKET_DAYS.includes(new SwissDate(date.toDate()).day);
 
     downloadFile = (url, params, filename) => {
-        axios
+        http
             .get(url, {
                 responseType: 'arraybuffer',
                 // headers: {

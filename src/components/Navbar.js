@@ -39,6 +39,7 @@ class Navbar extends Component {
         const btnProps = {
             variant: 'contained',
             color: 'secondary',
+            size: 'small',
         };
 
         return (authenticated &&
@@ -51,7 +52,12 @@ class Navbar extends Component {
                             </IconButton>
                         </Box>
                         <Box component="span" m={1}>
-                            <Button {...btnProps} endIcon={<AddCircle/>} component={Link} to="/order">
+                            <Button
+                                {...btnProps}
+                                endIcon={<AddCircle/>}
+                                component={Link}
+                                to="/order"
+                            >
                                 Commander
                             </Button>
                         </Box>

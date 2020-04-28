@@ -1,16 +1,18 @@
 import {LOADING_DATA, SET_FUTURE_ORDERS, SET_PAST_ORDERS} from '../types';
-import axios from 'axios';
+import http from '../../util/http'
 
 export const getFutureOrders = () => (dispatch) => {
     dispatch({type: LOADING_DATA});
-    axios.get('/future_orders')
-        .then(res => dispatch({
-                type: SET_FUTURE_ORDERS,
-                payload: res.data,
-            })
+    http.get('/future_orders')
+        .then((res) => {
+                dispatch({
+                    type: SET_FUTURE_ORDERS,
+                    payload: res.data,
+                })
+            }
         )
         .catch(err => {
-            console.log(err);
+            console.log(err.response);
             if (err.status === 403) {
                 window.location.reload(false);
             }
@@ -24,14 +26,14 @@ export const getFutureOrders = () => (dispatch) => {
 
 export const getPastOrders = () => (dispatch) => {
     dispatch({type: LOADING_DATA});
-    axios.get('/past_orders')
+    http.get('/past_orders')
         .then(res => dispatch({
                 type: SET_PAST_ORDERS,
                 payload: res.data,
             })
         )
         .catch(err => {
-            console.log(err);
+            console.log(err.response);
             if (err.status === 403) {
                 window.location.reload(false);
             }
