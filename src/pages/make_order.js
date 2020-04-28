@@ -31,6 +31,7 @@ const styles = {
     },
     gridContainer: {
         margin: 'auto',
+        width: '100%',
         maxWidth: 720,
     },
     fieldContainer: {
@@ -111,7 +112,7 @@ class OrderPage extends Component {
             loading: true,
         });
         http.post('/order', this.state.order)
-            .then((res) => {
+            .then(() => {
                 const dayDif = new SwissDate(this.state.order.locationDate).dayDifference(SwissDate.now())
                 console.log(dayDif, 'day difference');
                 if (dayDif > (2 + this.state.order.location.isMarket)) {
@@ -514,6 +515,7 @@ OrderPage.propTypes = {
 
 const mapStateToProps = state => ({
     data: state.data,
+    // UI: state.UI,
 });
 
 export default connect(mapStateToProps)(withStyles(styles)(OrderPage));
