@@ -24,6 +24,7 @@ import store from './redux/store'
 import {SET_AUTHENTICATED, SET_BREADS, SET_LOCATIONS, SET_USER} from './redux/types'
 import {logoutUser} from "./redux/actions/userAction";
 import DayjsUtils from '@date-io/dayjs';
+import frCH from 'dayjs/locale/fr-ch';
 import http from "./util/http";
 
 
@@ -59,7 +60,7 @@ if (token) {
 function App() {
     return (
         <MuiThemeProvider theme={createMuiTheme(themeFile)}>
-            <MuiPickersUtilsProvider utils={DayjsUtils}>
+            <MuiPickersUtilsProvider utils={DayjsUtils} locale={frCH}>
                 <Provider store={store}>
                     <div className="App">
                         <Router>
