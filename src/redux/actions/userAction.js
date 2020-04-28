@@ -6,7 +6,8 @@ import {
     SET_BREADS,
     SET_ERRORS,
     SET_LOCATIONS,
-    SET_UNAUTHENTICATED
+    SET_UNAUTHENTICATED,
+    SET_USER
 } from '../types'
 
 export const loginUser = (userData, history) => (dispatch) => {
@@ -40,8 +41,16 @@ export const loginUser = (userData, history) => (dispatch) => {
             });
             localStorage.setItem('idToBread', JSON.stringify(idToBread));
 
+            const userDetails = res.data.user
+            dispatch({
+                type: SET_USER,
+                payload: userDetails
+            });
+            localStorage.setItem('userDetails', JSON.stringify(userDetails));
+
             const firebaseToken = `Bearer ${res.data.token}`;
             localStorage.setItem('FBToken', firebaseToken);
+
             axios.defaults.headers.common['Authorization'] = firebaseToken;
             dispatch({type: SET_AUTHENTICATED});
             dispatch({type: CLEAR_ERRORS});

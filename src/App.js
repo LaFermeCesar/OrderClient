@@ -7,12 +7,14 @@ import themeFile from './util/theme'
 //Components
 import Navbar from "./components/Navbar";
 import PrivateRoute from "./util/PrivateRoute";
+import AdminRoute from "./util/AdminRoute";
 import OnlyPublicRoute from "./util/OnlyPublicRoute";
 import axios from 'axios'
 // Pages
 import home from './pages/my_orders'
 import login from './pages/login'
 import order from './pages/make_order'
+import admin from './pages/admin'
 // MUI
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
 // MUI Pickers
@@ -20,7 +22,7 @@ import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 // REDUX
 import {Provider} from 'react-redux'
 import store from './redux/store'
-import {SET_AUTHENTICATED, SET_BREADS, SET_LOCATIONS} from './redux/types'
+import {SET_AUTHENTICATED, SET_BREADS, SET_LOCATIONS, SET_USER} from './redux/types'
 import {logoutUser} from "./redux/actions/userAction";
 import DayjsUtils from '@date-io/dayjs';
 
@@ -43,6 +45,10 @@ if (token) {
             type: SET_BREADS,
             payload: JSON.parse(localStorage.idToBread)
         });
+        store.dispatch({
+            type: SET_USER,
+            payload: JSON.parse(localStorage.userDetails)
+        });
         axios.defaults.headers.common['Authorization'] = token;
     } else {
         store.dispatch(logoutUser());
@@ -63,6 +69,7 @@ function App() {
                                     <OnlyPublicRoute exact path="/login" component={login}/>
                                     <PrivateRoute exact path="/" component={home}/>
                                     <PrivateRoute exact path="/order" component={order}/>
+                                    <AdminRoute exact path="/admin" component={admin}/>
                                 </Switch>
                             </div>
                         </Router>

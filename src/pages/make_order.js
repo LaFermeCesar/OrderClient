@@ -21,6 +21,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import SwissDate from "../util/swiss_date";
 
 const styles = {
     form: {
@@ -67,7 +68,7 @@ class OrderPage extends Component {
 
         this.state = {
             order: {
-                locationDate: this.nextDay(defaultDaysOfWeek).toISOString(),
+                locationDate: SwissDate.now().plus(1).next(defaultDaysOfWeek).string,
                 locationID: '',
                 location: {
                     name: '',
@@ -96,24 +97,15 @@ class OrderPage extends Component {
         }
     });
 
-    nextDay = (days) => {
-        const date = new Date();
-        date.setHours(0, 0, 0, 0);
-        while (!days.includes(date.getDay())) {
-            date.setDate(date.getDate() + 1);
-        }
-        return date;
-    };
-
     makeOrder = () => {
         this.setState({
             loading: true,
         });
         axios.post('/order', this.state.order)
             .then((res) => {
-                const timeStampDif = new Date(this.state.order.locationDate).getTime() - this.todayAtMidnight().getTime();
-                console.log(timeStampDif / (1000 * 60 * 60));
-                if (timeStampDif / (1000 * 60 * 60) > (24 + 24 * this.state.order.location.isMarket)) {
+                const dayDif = new SwissDate(this.state.order.locationDate).dayDifference(SwissDate.now())
+                console.log(dayDif, 'day difference');
+                if (dayDif > (2 + this.state.order.location.isMarket)) {
                     this.setState({
                         orderInTime: true,
                     });
@@ -191,12 +183,12 @@ class OrderPage extends Component {
         const locationID = event.target.value;
         if (locationID !== '') {
             const location = idToLoc[locationID];
-            let locationDate = new Date(this.state.order.locationDate);
-            if (!location.daysOfWeek.includes(locationDate.getDay())) {
-                locationDate = this.nextDay(location.daysOfWeek);
+            let locationDate = new SwissDate(this.state.order.locationDate);
+            if (!location.daysOfWeek.includes(locationDate.day)) {
+                locationDate = SwissDate.next(location.daysOfWeek);
             }
 
-            locationDate = locationDate.toISOString();
+            locationDate = locationDate.string;
             this.setState({
                 order: {...this.state.order, locationDate, locationID, location}
             });
@@ -207,9 +199,7 @@ class OrderPage extends Component {
     };
 
     handleDateChange = (date) => {
-        let locationDate = date.toDate();
-        locationDate.setHours(0, 0, 0, 0);
-        locationDate = locationDate.toISOString();
+        const locationDate = new SwissDate(date.toDate()).string;
         this.setState({
             order: {
                 ...this.state.order,
@@ -278,16 +268,9 @@ class OrderPage extends Component {
         })
     };
 
-    todayAtMidnight = () => {
-        const todayAtMidnight = new Date();
-        todayAtMidnight.setHours(0, 0, 0, 0);
-        return todayAtMidnight;
-    };
-
-
     shouldDisableDate = (date) => {
-        return !this.state.order.location.daysOfWeek.includes(date.toDate().getDay())
-            || date.toDate().toISOString() < this.todayAtMidnight().toISOString();
+        return !this.state.order.location.daysOfWeek.includes(new SwissDate(date.toDate()).day)
+            || new SwissDate(date.toDate()).dayDifference(SwissDate.now()) < 1;
     };
 
     addBread = () => {

@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import HomeIcon from '@material-ui/icons/Home';
 import AddCircle from '@material-ui/icons/AddCircle';
+import AdminIcon from '@material-ui/icons/SupervisorAccount';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import IconButton from "@material-ui/core/IconButton";
 import PropTypes from "prop-types";
@@ -34,7 +35,7 @@ class Navbar extends Component {
     };
 
     render() {
-        const {classes, authenticated} = this.props;
+        const {classes, authenticated, isAdmin} = this.props;
         const btnProps = {
             variant: 'contained',
             color: 'secondary',
@@ -54,6 +55,13 @@ class Navbar extends Component {
                                 Commander
                             </Button>
                         </Box>
+                        {isAdmin && (
+                            <Box component="span" m={1}>
+                                <IconButton {...btnProps} component={Link} to="/admin">
+                                    <AdminIcon/>
+                                </IconButton>
+                            </Box>)
+                        }
                     </Box>
                     <IconButton
                         {...btnProps}
@@ -73,11 +81,13 @@ class Navbar extends Component {
 
 Navbar.propTypes = {
     authenticated: PropTypes.bool.isRequired,
+    isAdmin: PropTypes.bool.isRequired,
     logoutUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
     authenticated: state.user.authenticated,
+    isAdmin: state.user.details.isAdmin,
 });
 
 const mapActionsToProps = {
