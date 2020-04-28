@@ -114,20 +114,20 @@ class LoginPage extends Component {
                             fullWidth/>
                         {errors.general && (
                             <Typography variant='body2' className={classes.customError}>
-                                Ce numéro est déjà associé à une autre paire de prénom/nom
+                                {errors.general}. Vérifiez les valeurs entrées.
                             </Typography>
                         )}
                         {(errors.phoneNumber && (
                             <Typography variant='body2' className={classes.customError}>
-                                Veuillez vérifier le numéro de téléphone
+                                Le numéro de téléphone est invalide
                             </Typography>
                         )) || (errors.firstName && (
                             <Typography variant='body2' className={classes.customError}>
-                                Veuillez vérifier le prénom
+                                Le prénom est invalide
                             </Typography>
                         )) || (errors.lastName && (
                             <Typography variant='body2' className={classes.customError}>
-                                Veuillez vérifier le nom
+                                Le nom est invalide
                             </Typography>
                         ))}
                         <Button
