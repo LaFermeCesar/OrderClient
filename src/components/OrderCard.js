@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import dayjs from "dayjs";
-import {dayToFrenchName, monthToFrenchName} from "../util/utils";
+import {pad} from "../util/utils";
 import {withRouter} from "react-router-dom";
 import {styled} from "@material-ui/styles";
 import InfoIcon from "@material-ui/icons/Info";
@@ -55,11 +55,7 @@ class OrderCard extends Component {
 
     render() {
         const {classes, order} = this.props;
-
         const date = new SwissDate(order.locationDate);
-
-        const day = dayToFrenchName(date.day).toLowerCase();
-        const month = monthToFrenchName(date.month).toLowerCase();
 
         const buttonProps = {
             variant: 'contained',
@@ -74,13 +70,16 @@ class OrderCard extends Component {
             <Card variant='outlined' className={classes.card}>
                 <CardContent className={classes.cardContent}>
                     <Typography variant='h6'>
-                        Commande du {day} {dayjs(date.string).format('D')} {month}
+                        Commande n°{pad(parseInt(order.breadID.slice(0, 4)), 8)}
                     </Typography>
                     <Typography variant='body2'>
                         Lieu: {order.location.name}
                     </Typography>
                     <Typography variant='body2'>
                         Date: {dayjs(date.string).format('DD/MM/YYYY')}
+                    </Typography>
+                    <Typography variant='body2'>
+                        {order.breadList.length} produit{order.breadList.length > 1 && 's'}
                     </Typography>
                 </CardContent>
                 <CardActions className={classes.actionsContainer}>

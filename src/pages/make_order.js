@@ -11,7 +11,6 @@ import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import AddIcon from '@material-ui/icons/Add';
 import SendIcon from '@material-ui/icons/Send';
-import BackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -415,19 +414,6 @@ class OrderPage extends Component {
                                 disabled={loading}
                             >
                                 Ajouter produit
-                            </Button>
-                        </Grid>
-
-                        <Grid className={classes.buttonContainer} item md={3} xs={12}>
-                            <Button
-                                className={classes.button}
-                                onClick={this.handleCancelClicked}
-                                variant='contained'
-                                color='primary'
-                                endIcon={<BackIcon/>}
-                                disabled={loading}
-                            >
-                                Retour
                             </Button>
                         </Grid>
 
