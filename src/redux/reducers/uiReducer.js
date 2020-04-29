@@ -1,8 +1,22 @@
-import {CLEAR_ERRORS, LOADING_UI, SET_ERRORS} from '../types'
+import {
+    ASK_DELETE_CONFIRM,
+    CLEAR_ERRORS,
+    HIDE_DELETE_CONFIRM,
+    LOADING_UI,
+    ORDER_SUCCESS_IN_TIME,
+    ORDER_SUCCESS_OUT_OF_TIME,
+    ORDER_SUCESS_DONE,
+    SET_ERRORS
+} from '../types'
 
 const initialState = {
     loading: false,
     errors: {},
+
+    showOrderSuccess: false,
+    isOrderInTime: true,
+
+    showDeleteConfirm: false,
 };
 
 export default function (state = initialState, action) {
@@ -23,6 +37,33 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 loading: true,
+            };
+        case ORDER_SUCCESS_IN_TIME:
+            return {
+                ...state,
+                showOrderSuccess: true,
+                isOrderInTime: true,
+            };
+        case ORDER_SUCCESS_OUT_OF_TIME:
+            return {
+                ...state,
+                showOrderSuccess: true,
+                isOrderInTime: false,
+            };
+        case ORDER_SUCESS_DONE:
+            return {
+                ...state,
+                showOrderSuccess: false,
+            };
+        case ASK_DELETE_CONFIRM:
+            return {
+                ...state,
+                showDeleteConfirm: true,
+            };
+        case HIDE_DELETE_CONFIRM:
+            return {
+                ...state,
+                showDeleteConfirm: false,
             };
         default:
             return state;

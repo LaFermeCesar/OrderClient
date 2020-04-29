@@ -14,17 +14,13 @@ import SendIcon from '@material-ui/icons/Send';
 import ClearIcon from '@material-ui/icons/Clear';
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogActions from "@material-ui/core/DialogActions";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import SwissDate from "../util/swiss_date";
 import Container from "@material-ui/core/Container";
-
-import http from '../util/http'
-import {setErrors, setLoading, updateSelectedOrder} from "../redux/actions/dataAction";
+import {postOrder, updateSelectedOrder} from "../redux/actions/dataAction";
+import OrderSuccessDialog from "../components/OrderSuccessDialog";
+import DeleteDialog from "../components/DeleteDialog";
+import {askDeleteConfirm} from "../redux/actions/uiAction";
 
 const styles = {
     form: {
@@ -93,8 +89,6 @@ class OrderPage extends Component {
                 breadList: [this.newBreadOrder()],
                 ...order,
             },
-            openAlert: false,
-            orderInTime: undefined,
             showDeleteAlert: false,
         };
     };
@@ -117,64 +111,21 @@ class OrderPage extends Component {
         bread: this.mapIDToBread()
     });
 
-    makeOrder = () => {
-        this.props.setLoading();
-        http.post('/order', this.state.order)
-            .then(() => {
-                const dayDif = new SwissDate(this.state.order.locationDate).dayDifference(SwissDate.now())
-                if (dayDif >= (2 + this.state.order.location.isMarket)) {
-                    this.setState({
-                        orderInTime: true,
-                    });
-                } else {
-                    this.setState({
-                        orderInTime: false,
-                    });
-                }
-                this.setState({
-                    openAlert: true,
-                });
-                this.props.setErrors({});
-            })
-            .catch((err) => {
-                console.log(err.response);
-                if (err.status === 403) {
-                    window.location.reload(false);
-                }
-                this.props.setErrors(err.response.data);
-            })
+    handlePostClicked = () => {
+        this.props.postOrder(this.state.order);
     };
 
-    deleteOrder = () => {
-        this.props.setLoading();
-        http.post('/delete_order', {orderID: this.state.order.orderID})
-            .then(() => {
-                this.props.history.push('/');
-                // window.location.reload(false);
-            })
-            .catch((err) => {
-                console.log(err.response);
-                if (err.status === 403) {
-                    window.location.reload(false);
-                }
-            })
-            .finally(() => {
-                this.props.setErrors({})
-            });
+    handleDeleteClicked = () => {
+        this.props.askDeleteConfirm();
     };
 
-    handleCloseAlert = () => {
-        this.setState({
-            openAlert: false,
-            orderInTime: undefined,
-        });
+    handleCancelClicked = () => {
         this.props.history.push('/');
-        // window.location.reload(false);
     };
 
     handleSubmit = (event) => {
         event.preventDefault();
-        this.makeOrder();
+        this.handlePostClicked();
     };
 
     handleChange = (event) => {
@@ -429,7 +380,7 @@ class OrderPage extends Component {
 
                             <Button
                                 className={classes.button}
-                                onClick={() => this.props.history.push('/')}
+                                onClick={this.handleCancelClicked}
                                 variant='contained'
                                 color='primary'
                                 endIcon={<ClearIcon/>}
@@ -443,9 +394,7 @@ class OrderPage extends Component {
                             <Grid className={classes.buttonContainer} item sm={2} xs={12}>
                                 <Button
                                     className={classes.button}
-                                    onClick={() => {
-                                        this.setState({showDeleteAlert: true})
-                                    }}
+                                    onClick={this.handleDeleteClicked}
                                     variant='contained'
                                     color='primary'
                                     endIcon={<DeleteIcon/>}
@@ -463,46 +412,9 @@ class OrderPage extends Component {
                     </Grid>
                 )}
 
-                <Dialog
-                    open={this.state.openAlert}
-                >
-                    <DialogTitle>{this.state.orderInTime ? `Commande réussie` : `Commande hors délai`}</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            {this.state.orderInTime ? `Votre commande a bien été enregistré` :
-                                `Votre commande a bien été enregistré. Néanmoins, la production a déjà débuté.
-                            Nous ne pouvons donc pas garantir à 100% la disponibilité de tous les produits demandés.
-                            Nous ferons au mieux pour vous contacter en cas d'indisponibilité.
-                            Merci de votre compréhension.`}
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleCloseAlert} color="primary" autoFocus>
-                            {this.state.orderInTime ? `Merci` : `J'ai compris`}
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                <OrderSuccessDialog/>
+                <DeleteDialog/>
 
-                <Dialog
-                    open={this.state.showDeleteAlert}
-                >
-                    <DialogTitle>Suppression de commande</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Vous êtes en train de supprimer votre commande de pain.
-                            Êtes-vous sûr de vouloir continuer cette opération ?
-                            (merci de minimiser les annulations de commande au maximum dans le futur)
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => this.setState({showDeleteAlert: false})} color="primary" autoFocus>
-                            Annuler
-                        </Button>
-                        <Button onClick={this.deleteOrder} color="primary">
-                            Confirmer
-                        </Button>
-                    </DialogActions>
-                </Dialog>
             </Container>
         );
     }
@@ -511,9 +423,9 @@ class OrderPage extends Component {
 OrderPage.propTypes = {
     order: PropTypes.object,
     data: PropTypes.object.isRequired,
-    setLoading: PropTypes.func.isRequired,
-    setErrors: PropTypes.func.isRequired,
     updateSelectedOrder: PropTypes.func.isRequired,
+    postOrder: PropTypes.func.isRequired,
+    askDeleteConfirm: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -522,9 +434,9 @@ const mapStateToProps = state => ({
 });
 
 const mapActionToProps = {
-    setLoading,
-    setErrors,
     updateSelectedOrder,
+    postOrder,
+    askDeleteConfirm
 };
 
 export default connect(mapStateToProps, mapActionToProps)(withStyles(styles)(OrderPage));
