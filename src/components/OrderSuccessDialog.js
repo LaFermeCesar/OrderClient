@@ -18,7 +18,8 @@ class OrderSuccessDialog extends Component {
     };
 
     render() {
-        const linkMap = (s) => <a href="https://goo.gl/maps/vDCoMVvbhQ7wVbxm9" target='_blank'>{s}</a>
+        const linkMap = (s) => <a href="https://goo.gl/maps/vDCoMVvbhQ7wVbxm9" target='_blank'
+                                  rel="noopener noreferrer">{s}</a>
 
         return (
             <Dialog
