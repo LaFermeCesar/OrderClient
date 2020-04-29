@@ -48,20 +48,25 @@ class Navbar extends Component {
             <AppBar>
                 <Toolbar className="nav-container">
                     <Box className={classes.navbarMenu}>
-                        <Box component="span" m={1}>
-                            <IconButton {...btnProps} component={Link} to="/">
-                                <HomeIcon/>
-                            </IconButton>
-                        </Box>
-                        <Box component="span" m={1}>
-                            <Button
-                                {...btnProps}
-                                endIcon={<AddCircle/>}
-                                onClick={() => this.props.newOrder(this.props.history)}
-                            >
-                                Commander
-                            </Button>
-                        </Box>
+                        {this.props.location.pathname !== '/' && (<Box component="span" m={1}>
+                                <Button {...btnProps} component={Link} to="/" startIcon={<HomeIcon/>}>
+                                    Accueil
+                                </Button>
+                            </Box>
+                        )}
+                        {this.props.location.pathname !== '/order' &&
+                        this.props.location.pathname !== '/admin' && (
+                            <Box component="span" m={1}>
+                                <Button
+                                    {...btnProps}
+                                    endIcon={<AddCircle/>}
+                                    onClick={() => this.props.newOrder(this.props.history)}
+                                >
+                                    Commander
+                                </Button>
+                            </Box>
+                        )}
+
                         {isAdmin && (
                             <Box component="span" m={1}>
                                 <IconButton {...btnProps} component={Link} to="/admin">
