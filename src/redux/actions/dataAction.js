@@ -139,6 +139,7 @@ export const deleteOrder = (orderID, history) => (dispatch) => {
     http.post('/delete_order', {orderID})
         .then(() => {
             history.push('/');
+            window.location.reload(false);
         })
         .catch((err) => {
             console.log(err.response);

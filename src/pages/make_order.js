@@ -22,6 +22,7 @@ import OrderSuccessDialog from "../components/OrderSuccessDialog";
 import DeleteDialog from "../components/DeleteDialog";
 import {askDeleteConfirm} from "../redux/actions/uiAction";
 import Typography from "@material-ui/core/Typography";
+import ListSubheader from "@material-ui/core/ListSubheader";
 
 const styles = {
     form: {
@@ -47,8 +48,10 @@ const styles = {
         height: 0.1,
     },
     multipleOf: {
-        fontSize: '70%',
+        fontSize: '80%',
         paddingLeft: 5,
+        display: 'inline-block',
+        fontStyle: 'italic',
     },
     progressContainer: {
         margin: 'auto',
@@ -61,6 +64,9 @@ const styles = {
     errorContainer: {
         textAlign: 'center',
     },
+    breadCat: {
+        background: 'white',
+    }
 };
 
 const DEFAULT_DAYS_OF_WEEK = [2, 3, 5, 6]
@@ -99,7 +105,19 @@ class OrderPage extends Component {
                 ...order,
             },
         };
+
+        this.catToName = {
+            levain: 'Pains au levain',
+            levure: 'Tresses et cuchaules',
+            'sans-gluten': 'Pains sans-gluten',
+            'petit-pain': 'Petits pains',
+            autre: 'Autres'
+        };
     };
+
+    componentWillUnmount() {
+        this.props.updateSelectedOrder(this.state.order);
+    }
 
     mapIDToBread = (id) => {
         if (!id || !this.props.data.idToBread[id]) {
@@ -108,6 +126,7 @@ class OrderPage extends Component {
                 desc: '',
                 unitName: 'kg',
                 unitStep: 0.5,
+                cat: '',
             }
         }
         return this.props.data.idToBread[id];
@@ -175,33 +194,35 @@ class OrderPage extends Component {
 
     handleBreadChange = (event, breadIndex) => {
         const breadID = event.target.value;
-        if (breadID !== '') {
-            const bread = this.props.data.idToBread[breadID];
-            this.setState({
-                order: {
-                    ...this.state.order,
-                    breadList: this.state.order.breadList.map((b, i) => {
-                        if (i === breadIndex) {
-                            return {...b, breadID, bread, quantity: b.quantity}
-                        } else {
-                            return b
-                        }
-                    }),
-                }
-            });
-        } else {
-            this.setState({
-                order: {
-                    ...this.state.order,
-                    breadList: this.state.order.breadList.map((b, i) => {
-                        if (i === breadIndex) {
-                            return this.newBreadOrder()
-                        } else {
-                            return b
-                        }
-                    }),
-                }
-            });
+        if (!Object.keys(this.catToName).includes(breadID)) {
+            if (breadID !== '') {
+                const bread = this.props.data.idToBread[breadID];
+                this.setState({
+                    order: {
+                        ...this.state.order,
+                        breadList: this.state.order.breadList.map((b, i) => {
+                            if (i === breadIndex) {
+                                return {...b, breadID, bread, quantity: b.quantity}
+                            } else {
+                                return b
+                            }
+                        }),
+                    }
+                });
+            } else {
+                this.setState({
+                    order: {
+                        ...this.state.order,
+                        breadList: this.state.order.breadList.map((b, i) => {
+                            if (i === breadIndex) {
+                                return this.newBreadOrder()
+                            } else {
+                                return b
+                            }
+                        }),
+                    }
+                });
+            }
         }
     };
 
@@ -256,19 +277,11 @@ class OrderPage extends Component {
         const locations = Object.values(idToLoc)
             .sort((l, r) => l.name.localeCompare(r.name));
 
-        // const catToName = {
-        //     levain: 'Pains au levain',
-        //     levure: 'Tresses et cuchaules',
-        //     'sans-gluten': 'Pains sans-gluten',
-        //     'petit-pain': 'Petits pains',
-        //     autre: 'Autres'
-        // };
-
         return (
             <Container>
                 <form noValidate className={classes.form} onSubmit={this.handleSubmit}>
                     <Grid container spacing={3} className={classes.gridContainer}>
-                        <Grid className={classes.fieldContainer} item sm={6} xs={12}>
+                        <Grid className={classes.fieldContainer} item md={6} xs={12}>
                             <Select
                                 variant='outlined'
                                 name='locationID'
@@ -286,7 +299,7 @@ class OrderPage extends Component {
                                     <MenuItem key={loc.locationID} value={loc.locationID}>{loc.name}</MenuItem>))}
                             </Select>
                         </Grid>
-                        <Grid className={classes.fieldContainer} item sm={6} xs={12}>
+                        <Grid className={classes.fieldContainer} item md={6} xs={12}>
                             <DatePicker
                                 clearable
                                 variant='outlined'
@@ -304,7 +317,7 @@ class OrderPage extends Component {
                             return (
                                 <Fragment key={index}>
                                     <hr color='primary' className={classes.breadSeparator}/>
-                                    <Grid className={classes.fieldContainer} item sm={6} xs={12}>
+                                    <Grid className={classes.fieldContainer} item md={6} xs={12}>
                                         <Select
                                             variant='outlined'
                                             name='breadID'
@@ -316,18 +329,27 @@ class OrderPage extends Component {
                                             fullWidth
                                         >
                                             <MenuItem value="">
-                                                <em>Choisissez votre pain</em>
+                                                <em>Choisissez un produit</em>
                                             </MenuItem>
 
-                                            {breads.map(b => (
-                                                <MenuItem key={b.breadID} value={b.breadID}>
-                                                    {b.name}
-                                                </MenuItem>)
-                                            )}
+                                            {Object.keys(this.catToName).map((cat) => [
+                                                <ListSubheader key={cat} value={cat} className={classes.breadCat}>
+                                                    {this.catToName[cat]}
+                                                </ListSubheader>,
+                                                breads
+                                                    .filter(b => b.cat === cat)
+                                                    .map(b => {
+                                                        return (
+                                                            <MenuItem key={b.breadID} value={b.breadID}>
+                                                                {b.name}
+                                                            </MenuItem>)
+                                                    })
+                                            ])}
                                         </Select>
                                     </Grid>
-                                    <Grid className={classes.fieldContainer} item sm={4} xs={10}>
+                                    <Grid className={classes.fieldContainer} item md={2} xs={4}>
                                         <TextField
+                                            type='number'
                                             variant='outlined'
                                             name='quantity'
                                             value={breadOrder.quantity}
@@ -335,24 +357,26 @@ class OrderPage extends Component {
                                             error={!!errors[`breadList_quantity_${index}`]}
                                             onChange={(event) => this.handleQuantityChange(event, index)}
                                             InputProps={{
-                                                endAdornment: <InputAdornment position="end">
-                                                    <b>{breadOrder.bread.unitName}</b>
-                                                    <em className={classes.multipleOf}>
-                                                        (multiple de {breadOrder.bread.unitStep})
-                                                    </em>
-                                                </InputAdornment>,
+                                                endAdornment:
+                                                    <InputAdornment position="end">
+                                                        <b>{breadOrder.bread.unitName}</b>
+                                                    </InputAdornment>,
                                             }}
                                             inputProps={{
-                                                min: 0,
-                                                step: breadOrder.bread.unitStep,
+                                                min: '0',
+                                                step: `${breadOrder.bread.unitStep}`,
                                             }}
                                             fullWidth
-                                        >
-                                        </TextField>
+                                        />
                                     </Grid>
-                                    <Grid className={classes.fieldContainer} item sm={2} xs={2}>
-                                        <IconButton color='primary' onClick={() => this.removeBread(index)}>
-                                            <ClearIcon/>
+                                    <Grid className={classes.fieldContainer} item md={3} xs={6}>
+                                        <div className={classes.multipleOf}>
+                                            (multiple de {breadOrder.bread.unitStep} accepté)
+                                        </div>
+                                    </Grid>
+                                    <Grid className={classes.fieldContainer} item md={1} xs={2}>
+                                        <IconButton color='default' onClick={() => this.removeBread(index)}>
+                                            <DeleteIcon/>
                                         </IconButton>
                                     </Grid>
                                 </Fragment>
@@ -369,15 +393,15 @@ class OrderPage extends Component {
                                 </Typography>
                             )) || (this.state.order.breadList.find((_, i) => errors[`breadList_breadID_${i}`]) && (
                                 <Typography variant='body2' className={classes.customError}>
-                                    Le pain sélectionné est invalide
+                                    Le produit sélectionné est invalide
                                 </Typography>
                             )) || (this.state.order.breadList.find((_, i) => errors[`breadList_quantity_${i}`]) && (
                                 <Typography variant='body2' className={classes.customError}>
-                                    La quantité de pain sélectionnée est invalide
+                                    La quantité sélectionnée est invalide
                                 </Typography>
                             ))}
                         </Grid>
-                        <Grid className={classes.buttonContainer} item sm={3 + !this.state.order.orderID} xs={12}>
+                        <Grid className={classes.buttonContainer} item md={3 + !this.state.order.orderID} xs={12}>
 
                             <Button
                                 className={classes.button}
@@ -387,10 +411,10 @@ class OrderPage extends Component {
                                 endIcon={<AddIcon/>}
                                 disabled={loading}
                             >
-                                Ajouter un pain
+                                Ajouter produit
                             </Button>
                         </Grid>
-                        <Grid className={classes.buttonContainer} item sm={4 + !this.state.order.orderID} xs={12}>
+                        <Grid className={classes.buttonContainer} item md={4 + !this.state.order.orderID} xs={12}>
 
                             <Button
                                 className={classes.button}
@@ -403,7 +427,7 @@ class OrderPage extends Component {
                                 {this.state.order.orderID ? 'Appliquer les changements' : 'Passer commande'}
                             </Button>
                         </Grid>
-                        <Grid className={classes.buttonContainer} item sm={3} xs={12}>
+                        <Grid className={classes.buttonContainer} item md={3} xs={12}>
 
                             <Button
                                 className={classes.button}
@@ -418,7 +442,7 @@ class OrderPage extends Component {
                         </Grid>
 
                         {this.state.order.orderID ? (
-                            <Grid className={classes.buttonContainer} item sm={2} xs={12}>
+                            <Grid className={classes.buttonContainer} item md={2} xs={12}>
                                 <Button
                                     className={classes.button}
                                     onClick={this.handleDeleteClicked}
@@ -434,7 +458,7 @@ class OrderPage extends Component {
                 </form>
 
                 {loading && (
-                    <Grid className={classes.progressContainer} item sm={6} xs={10}>
+                    <Grid className={classes.progressContainer} item md={6} xs={10}>
                         <LinearProgress/>
                     </Grid>
                 )}
