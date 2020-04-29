@@ -21,3 +21,4 @@ export const SET_PAST_ORDERS = 'SET_PAST_ORDERS';
 export const SET_LOCATIONS = 'SET_LOCATIONS';
 export const SET_BREADS = 'SET_BREADS';
 export const SET_ORDER = 'SET_ORDER';
+export const CLEAR_ORDER = 'CLEAR_ORDER';

@@ -18,9 +18,8 @@ class DeleteDialog extends Component {
     };
 
     handleConfirm = () => {
-        this.props.deleteOrder(this.props.data.order, this.props.history);
+        this.props.deleteOrder(this.props.UI.orderIDToDelete, this.props.history);
     };
-
 
     render() {
         return (
@@ -49,14 +48,12 @@ class DeleteDialog extends Component {
 }
 
 DeleteDialog.propTypes = {
-    data: PropTypes.object,
     UI: PropTypes.object,
     cancelDelete: PropTypes.func.isRequired,
     deleteOrder: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-    data: state.data,
     UI: state.UI,
 });
 

@@ -4,8 +4,8 @@ export const orderSuccessDone = () => (dispatch) => {
     dispatch({type: ORDER_SUCESS_DONE})
 }
 
-export const askDeleteConfirm = () => (dispatch) => {
-    dispatch({type: ASK_DELETE_CONFIRM})
+export const askDeleteConfirm = (order) => (dispatch) => {
+    dispatch({type: ASK_DELETE_CONFIRM, payload: order.orderID})
 }
 
 export const cancelDelete = () => (dispatch) => {

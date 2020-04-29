@@ -9,6 +9,8 @@ import {getFutureOrders, getPastOrders} from "../redux/actions/dataAction";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import DeleteDialog from "../components/DeleteDialog";
+import Container from "@material-ui/core/Container";
 
 const styles = {
     root: {},
@@ -50,22 +52,26 @@ class MyOrdersPage extends Component {
         };
 
         return (
-            <Grid container className={classes.root}>
-                <Grid item sm/>
-                <Grid item md className={classes.allOrders}>
-                    <div className={classes.ordersContainer}>
-                        <Typography className={classes.ordersTitle} variant='h5'>Commandes en cours</Typography>
-                        {ordersToMarkup(futureOrders)}
-                    </div>
-                    {pastOrders.length !== 0 && (
+            <Container>
+                <Grid container className={classes.root}>
+                    <Grid item sm/>
+                    <Grid item md className={classes.allOrders}>
                         <div className={classes.ordersContainer}>
-                            <Typography className={classes.ordersTitle} variant='h5'>Commandes passées</Typography>
-                            {ordersToMarkup(pastOrders)}
+                            <Typography className={classes.ordersTitle} variant='h5'>Commandes en cours</Typography>
+                            {ordersToMarkup(futureOrders)}
                         </div>
-                    )}
+                        {pastOrders.length !== 0 && (
+                            <div className={classes.ordersContainer}>
+                                <Typography className={classes.ordersTitle} variant='h5'>Commandes passées</Typography>
+                                {ordersToMarkup(pastOrders)}
+                            </div>
+                        )}
+                    </Grid>
+                    <Grid item sm/>
                 </Grid>
-                <Grid item sm/>
-            </Grid>
+
+                <DeleteDialog/>
+            </Container>
         );
     }
 }

@@ -1,5 +1,6 @@
 import {
     CLEAR_ERRORS,
+    CLEAR_ORDER,
     HIDE_DELETE_CONFIRM,
     LOADING_DATA,
     LOADING_UI,
@@ -67,6 +68,7 @@ export const setErrors = (errors) => (dispatch) => {
 
 export const newOrder = (history) => (dispatch) => {
     dispatch({type: CLEAR_ERRORS,})
+    dispatch({type: CLEAR_ORDER,})
     history.push('/order')
 }
 
@@ -94,9 +96,10 @@ export const repeatOrder = (order, history) => (dispatch) => {
 }
 
 
-export const cancelOrder = () => (dispatch) => {
+export const cancelOrder = (history) => (dispatch) => {
     dispatch({type: CLEAR_ERRORS,})
-
+    dispatch({type: CLEAR_ORDER,})
+    history.push('/');
 }
 
 export const updateSelectedOrder = (order) => (dispatch) => {
@@ -130,9 +133,9 @@ export const postOrder = (order) => (dispatch) => {
         })
 }
 
-export const deleteOrder = (order, history) => (dispatch) => {
+export const deleteOrder = (orderID, history) => (dispatch) => {
     dispatch({type: LOADING_UI})
-    http.post('/delete_order', {orderID: order.orderID})
+    http.post('/delete_order', {orderID})
         .then(() => {
             history.push('/');
         })

@@ -18,6 +18,7 @@ import IconButton from "@material-ui/core/IconButton";
 import PropTypes from "prop-types";
 import {editOrder, repeatOrder} from "../redux/actions/dataAction";
 import {connect} from "react-redux";
+import {askDeleteConfirm} from "../redux/actions/uiAction";
 
 const styles = {
     card: {
@@ -39,13 +40,18 @@ const styles = {
 
 class OrderCard extends Component {
 
-    editClicked = () => {
+    handleEditClicked = () => {
         this.props.editOrder(this.props.order, this.props.history);
     };
 
-    repeatClicked = () => {
+    handleRepeatClicked = () => {
         this.props.repeatOrder(this.props.order, this.props.history);
     };
+
+    handleDeleteClicked = () => {
+        this.props.askDeleteConfirm(this.props.order);
+    };
+
 
     render() {
         const {classes, order} = this.props;
@@ -83,7 +89,7 @@ class OrderCard extends Component {
                         color='primary'
                         className={classes.actionButton}
                         endIcon={<InfoIcon/>}
-                        onClick={this.editClicked}>
+                        onClick={this.handleEditClicked}>
                         Consulter
                     </Button>
                     <Button
@@ -91,16 +97,17 @@ class OrderCard extends Component {
                         color='secondary'
                         className={classes.actionButton}
                         endIcon={<RepeatIcon/>}
-                        onClick={this.repeatClicked}>
+                        onClick={this.handleRepeatClicked}>
                         Répéter
                     </Button>
-                    {false && (
-                        <BlackIconButton
-                            className={classes.actionButton}
-                        >
-                            <DeleteIcon/>
-                        </BlackIconButton>
-                    )}
+                    <BlackIconButton
+                        size='small'
+                        className={classes.actionButton}
+                        onClick={this.handleDeleteClicked}
+                    >
+                        <DeleteIcon/>
+                    </BlackIconButton>
+
                 </CardActions>
             </Card>
         );
@@ -111,13 +118,17 @@ OrderCard.propTypes = {
     order: PropTypes.object.isRequired,
     editOrder: PropTypes.func.isRequired,
     repeatOrder: PropTypes.func.isRequired,
+    askDeleteConfirm: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+    data: state.data,
+});
 
 const mapActionToProps = {
     editOrder,
     repeatOrder,
+    askDeleteConfirm
 };
 
 export default connect(mapStateToProps, mapActionToProps)(withRouter(withStyles(styles)(OrderCard)));

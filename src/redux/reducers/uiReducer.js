@@ -16,11 +16,17 @@ const initialState = {
     showOrderSuccess: false,
     isOrderInTime: true,
 
+    orderIDToDelete: '',
     showDeleteConfirm: false,
 };
 
 export default function (state = initialState, action) {
     switch (action.type) {
+        case LOADING_UI:
+            return {
+                ...state,
+                loading: true,
+            };
         case SET_ERRORS:
             return {
                 ...state,
@@ -32,11 +38,6 @@ export default function (state = initialState, action) {
                 ...state,
                 loading: false,
                 errors: {},
-            };
-        case LOADING_UI:
-            return {
-                ...state,
-                loading: true,
             };
         case ORDER_SUCCESS_IN_TIME:
             return {
@@ -59,6 +60,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 showDeleteConfirm: true,
+                orderIDToDelete: action.payload,
             };
         case HIDE_DELETE_CONFIRM:
             return {
