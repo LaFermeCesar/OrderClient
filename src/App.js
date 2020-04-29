@@ -32,19 +32,20 @@ const token = localStorage.FBToken;
 
 if (token) {
     const decodedToken = jwtDecode(token);
-    const isAuthenticated = decodedToken.exp * 1000 > Date.now();
+    const isAuthenticated = decodedToken.exp * 1000 > Date.now() &&
+        localStorage.locations && localStorage.breads && localStorage.userDetails;
     if (isAuthenticated) {
         http.setToken(token);
         store.dispatch({type: SET_AUTHENTICATED});
 
         store.dispatch({
             type: SET_LOCATIONS,
-            payload: JSON.parse(localStorage.idToLoc)
+            payload: JSON.parse(localStorage.locations)
         });
 
         store.dispatch({
             type: SET_BREADS,
-            payload: JSON.parse(localStorage.idToBread)
+            payload: JSON.parse(localStorage.breads)
         });
 
         store.dispatch({

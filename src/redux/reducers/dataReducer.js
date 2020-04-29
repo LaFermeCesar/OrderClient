@@ -39,15 +39,19 @@ export default function (state = initialState, action) {
                 loading: Math.max(0, state.loading - 1),
             };
         case SET_BREADS:
+            const idToBread = {};
+            action.payload.forEach((bread) => idToBread[bread.breadID] = bread);
             return {
                 ...state,
-                idToBread: action.payload,
+                idToBread: idToBread,
                 loading: Math.max(0, state.loading - 1),
             };
         case SET_LOCATIONS:
+            const idToLoc = {};
+            action.payload.forEach((loc) => idToLoc[loc.locationID] = loc);
             return {
                 ...state,
-                idToLoc: action.payload,
+                idToLoc: idToLoc,
                 loading: Math.max(0, state.loading - 1),
             };
         default:
