@@ -66,6 +66,8 @@ const styles = {
     },
     breadCat: {
         background: 'white',
+        color: '#388e3c',
+        boxShadow: '0 2px #e7e7e7',
     }
 };
 
