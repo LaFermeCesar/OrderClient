@@ -26,21 +26,20 @@ export const loginUser = (userData, history) => (dispatch) => {
             return Promise.reject(err);
         })
         .then((res) => {
-            const idToLoc = {};
-            res.data.locations.forEach((loc) => idToLoc[loc.locationID] = loc);
+
+            const locations = res.data.locations
             dispatch({
                 type: SET_LOCATIONS,
-                payload: idToLoc,
+                payload: locations,
             });
-            localStorage.setItem('idToLoc', JSON.stringify(idToLoc));
+            localStorage.setItem('locations', JSON.stringify(locations));
 
-            const idToBread = {};
-            res.data.breads.forEach((bread) => idToBread[bread.breadID] = bread);
+            const breads = res.data.breads
             dispatch({
                 type: SET_BREADS,
-                payload: idToBread
+                payload: breads
             });
-            localStorage.setItem('idToBread', JSON.stringify(idToBread));
+            localStorage.setItem('breads', JSON.stringify(breads));
 
             const userDetails = res.data.user
             dispatch({

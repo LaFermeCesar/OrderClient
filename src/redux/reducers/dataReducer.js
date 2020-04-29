@@ -1,6 +1,7 @@
-import {LOADING_DATA, SET_BREADS, SET_FUTURE_ORDERS, SET_LOCATIONS, SET_PAST_ORDERS} from '../types';
+import {LOADING_DATA, SET_BREADS, SET_FUTURE_ORDERS, SET_LOCATIONS, SET_ORDER, SET_PAST_ORDERS} from '../types';
 
 const initialState = {
+    order: {},
     futureOrders: [],
     pastOrders: [],
     idToBread: {},
@@ -52,6 +53,12 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 idToLoc: idToLoc,
+                loading: Math.max(0, state.loading - 1),
+            };
+        case SET_ORDER:
+            return {
+                ...state,
+                order: action.payload,
                 loading: Math.max(0, state.loading - 1),
             };
         default:
