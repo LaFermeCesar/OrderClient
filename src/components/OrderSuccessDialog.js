@@ -26,25 +26,24 @@ class OrderSuccessDialog extends Component {
             >
                 <DialogTitle>{this.props.UI.isOrderInTime ? `Commande réussie` : `Commande hors délai`}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        {this.props.UI.isOrderInTime ?
-                            <div>
-                                <p>
-                                    Votre commande a bien été enregistrée.
-                                </p>
-                                <p>
-                                    <b>INFO</b>: Nous sommes de retour au marché de Lausanne.
-                                    Notre stand sera à la rue Saint-Laurent, {linkMap('cliquer ici')}.
-                                </p>
-                            </div> :
+                    {this.props.UI.isOrderInTime ?
+                        <DialogContentText>
                             <p>
-                                Votre commande a bien été enregistré. Néanmoins, la production a déjà débuté.
-                                Nous ne pouvons donc pas garantir à 100% la disponibilité de tous les produits demandés.
-                                Nous ferons au mieux pour vous contacter en cas d'indisponibilité.
-                                Merci de votre compréhension.
+                                Votre commande a bien été enregistrée.
                             </p>
-                        }
-                    </DialogContentText>
+                            <p>
+                                <b>INFO</b>: Nous sommes de retour au marché de Lausanne.
+                                Notre stand sera à la rue Saint-Laurent, entre la Coop City et la banque Clerc.
+                                ({linkMap('lien vers notre stand')})
+                            </p>
+                        </DialogContentText> :
+                        <DialogContentText>
+                            Votre commande a bien été enregistrée. Néanmoins, la production a déjà débuté.
+                            Nous ne pouvons donc pas garantir à 100% la disponibilité de tous les produits demandés.
+                            Nous ferons au mieux pour vous contacter en cas d'indisponibilité.
+                            Merci de votre compréhension.
+                        </DialogContentText>
+                    }
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleCloseAlert} color="primary" autoFocus>
