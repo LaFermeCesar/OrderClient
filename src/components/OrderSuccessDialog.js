@@ -18,6 +18,8 @@ class OrderSuccessDialog extends Component {
     };
 
     render() {
+        const linkMap = (s) => <a href="https://goo.gl/maps/vDCoMVvbhQ7wVbxm9" target='_blank'>{s}</a>
+
         return (
             <Dialog
                 open={this.props.UI.showOrderSuccess}
@@ -25,11 +27,23 @@ class OrderSuccessDialog extends Component {
                 <DialogTitle>{this.props.UI.isOrderInTime ? `Commande réussie` : `Commande hors délai`}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        {this.props.UI.isOrderInTime ? `Votre commande a bien été enregistré` :
-                            `Votre commande a bien été enregistré. Néanmoins, la production a déjà débuté.
-                            Nous ne pouvons donc pas garantir à 100% la disponibilité de tous les produits demandés.
-                            Nous ferons au mieux pour vous contacter en cas d'indisponibilité.
-                            Merci de votre compréhension.`}
+                        {this.props.UI.isOrderInTime ?
+                            <div>
+                                <p>
+                                    Votre commande a bien été enregistrée.
+                                </p>
+                                <p>
+                                    <b>INFO</b>: Nous sommes de retour au marché de Lausanne.
+                                    Notre stand sera à la rue Saint-Laurent, {linkMap('cliquer ici')}.
+                                </p>
+                            </div> :
+                            <p>
+                                Votre commande a bien été enregistré. Néanmoins, la production a déjà débuté.
+                                Nous ne pouvons donc pas garantir à 100% la disponibilité de tous les produits demandés.
+                                Nous ferons au mieux pour vous contacter en cas d'indisponibilité.
+                                Merci de votre compréhension.
+                            </p>
+                        }
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
