@@ -11,60 +11,50 @@ import {
     SET_ORDER,
     SET_PAST_ORDERS
 } from '../types';
+
 import http from '../../util/http'
 import SwissDate from "../../util/swiss_date";
-
-const setFutureOrders = (orders) => (dispatch) => {
-    dispatch({
-        type: SET_FUTURE_ORDERS,
-        payload: orders,
-    })
-}
 
 export const getFutureOrders = () => (dispatch) => {
     dispatch({type: LOADING_DATA});
     http.get('/future_orders')
-        .then((res) => setFutureOrders(res.data)(dispatch))
+        .then((res) =>
+            dispatch({
+                type: SET_FUTURE_ORDERS,
+                payload: res.data,
+            }))
         .catch(err => {
             console.log(err.response);
             if (err.status === 403) {
                 window.location.reload(false);
             }
-            setFutureOrders([])(dispatch)
+            dispatch({
+                type: SET_FUTURE_ORDERS,
+                payload: [],
+            })
         })
 };
-
-
-const setPastOrders = (orders) => (dispatch) => {
-    dispatch({
-        type: SET_PAST_ORDERS,
-        payload: orders,
-    })
-}
 
 
 export const getPastOrders = () => (dispatch) => {
     dispatch({type: LOADING_DATA});
     http.get('/past_orders')
-        .then(res => setPastOrders(res.data)(dispatch))
+        .then(res => dispatch({
+            type: SET_PAST_ORDERS,
+            payload: res.data,
+        }))
         .catch(err => {
             console.log(err.response);
             if (err.status === 403) {
                 window.location.reload(false);
             }
-            setPastOrders([])(dispatch)
+            dispatch({
+                type: SET_PAST_ORDERS,
+                payload: [],
+            })
         })
 };
 
-
-export const setLoading = () => (dispatch) => dispatch({type: LOADING_UI})
-
-export const setErrors = (errors) => (dispatch) => {
-    dispatch({
-        type: SET_ERRORS,
-        payload: errors,
-    })
-}
 
 export const newOrder = (history) => (dispatch) => {
     dispatch({type: CLEAR_ERRORS,})
