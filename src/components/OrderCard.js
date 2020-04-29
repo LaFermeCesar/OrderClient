@@ -70,7 +70,7 @@ class OrderCard extends Component {
             <Card variant='outlined' className={classes.card}>
                 <CardContent className={classes.cardContent}>
                     <Typography variant='h6'>
-                        Commande n°{pad(parseInt(order.breadID.slice(0, 4)), 8)}
+                        Commande n°{pad(parseInt(order.orderID.slice(0, 4)), 8)}
                     </Typography>
                     <Typography variant='body2'>
                         Lieu: {order.location.name}
