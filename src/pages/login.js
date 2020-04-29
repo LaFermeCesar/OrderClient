@@ -71,7 +71,6 @@ class LoginPage extends Component {
 
     render() {
         const {classes, UI: {loading, errors}} = this.props;
-        // const {errors} = this.state;
 
         return (
             <Container>

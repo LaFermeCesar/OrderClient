@@ -6,9 +6,9 @@ import jwtDecode from 'jwt-decode'
 import themeFile from './util/theme'
 //Components
 import Navbar from "./components/Navbar";
-import PrivateRoute from "./util/PrivateRoute";
-import AdminRoute from "./util/AdminRoute";
-import OnlyPublicRoute from "./util/OnlyPublicRoute";
+import PrivateRoute from "./router/PrivateRoute";
+import AdminRoute from "./router/AdminRoute";
+import OnlyPublicRoute from "./router/OnlyPublicRoute";
 // Pages
 import home from './pages/my_orders'
 import login from './pages/login'
@@ -29,10 +29,11 @@ import http from "./util/http";
 
 
 const token = localStorage.FBToken;
+let isAuthenticated = !!token
 
 if (token) {
     const decodedToken = jwtDecode(token);
-    const isAuthenticated = decodedToken.exp * 1000 > Date.now() &&
+    isAuthenticated = decodedToken.exp * 1000 > Date.now() &&
         localStorage.locations && localStorage.breads && localStorage.userDetails;
     if (isAuthenticated) {
         http.setToken(token);
@@ -66,7 +67,7 @@ function App() {
                     <div className="App">
                         <Router>
                             <Navbar/>
-                            <div className="container">
+                            <div className={isAuthenticated && 'container'}>
                                 <Switch>
                                     <OnlyPublicRoute exact path="/login" component={login}/>
                                     <PrivateRoute exact path="/" component={home}/>
