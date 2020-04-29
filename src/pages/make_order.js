@@ -24,6 +24,7 @@ import SwissDate from "../util/swiss_date";
 import Container from "@material-ui/core/Container";
 
 import http from '../util/http'
+import {setErrors, setLoading, updateSelectedOrder} from "../redux/actions/dataAction";
 
 const styles = {
     form: {
@@ -65,15 +66,19 @@ class OrderPage extends Component {
         super(props);
 
         let daysOfWeek = DEFAULT_DAYS_OF_WEEK;
-        const order = props.location.order;
+        const order = this.props.data.order;
 
-        if (order) {
+        if (order.locationID) {
             order.location = props.data.idToLoc[order.locationID];
-            order.breadList = order.breadList.map(breadOrder => ({
-                ...breadOrder,
-                bread: props.data.idToBread[breadOrder.breadID]
-            }))
             daysOfWeek = order.location.daysOfWeek;
+        }
+
+        if (order.breadList) {
+            order.breadList = order.breadList
+                .map(b => ({
+                    ...b,
+                    bread: this.mapIDToBread(b.breadID),
+                }))
         }
 
         this.state = {
@@ -88,29 +93,32 @@ class OrderPage extends Component {
                 breadList: [this.newBreadOrder()],
                 ...order,
             },
-            errors: {},
-            loading: false,
             openAlert: false,
             orderInTime: undefined,
             showDeleteAlert: false,
         };
     };
 
+    mapIDToBread = (id) => {
+        if (!id || !this.props.data.idToBread[id]) {
+            return {
+                name: '',
+                desc: '',
+                unitName: 'kg',
+                unitStep: 0.5,
+            }
+        }
+        return this.props.data.idToBread[id];
+    }
+
     newBreadOrder = () => ({
         breadID: '',
         quantity: 1,
-        bread: {
-            name: '',
-            desc: '',
-            unitName: 'kg',
-            unitStep: 0.5,
-        }
+        bread: this.mapIDToBread()
     });
 
     makeOrder = () => {
-        this.setState({
-            loading: true,
-        });
+        this.props.setLoading();
         http.post('/order', this.state.order)
             .then(() => {
                 const dayDif = new SwissDate(this.state.order.locationDate).dayDifference(SwissDate.now())
@@ -126,31 +134,23 @@ class OrderPage extends Component {
                 this.setState({
                     openAlert: true,
                 });
+                this.props.setErrors({});
             })
             .catch((err) => {
                 console.log(err.response);
                 if (err.status === 403) {
                     window.location.reload(false);
                 }
-                this.setState({
-                    errors: err.response.data,
-                })
+                this.props.setErrors(err.response.data);
             })
-            .finally(() => {
-                this.setState({
-                    loading: false,
-                });
-            });
     };
 
     deleteOrder = () => {
-        this.setState({
-            loading: true,
-        });
+        this.props.setLoading();
         http.post('/delete_order', {orderID: this.state.order.orderID})
             .then(() => {
-                this.props.history.push('');
-                window.location.reload(false);
+                this.props.history.push('/');
+                // window.location.reload(false);
             })
             .catch((err) => {
                 console.log(err.response);
@@ -159,9 +159,7 @@ class OrderPage extends Component {
                 }
             })
             .finally(() => {
-                this.setState({
-                    loading: false,
-                });
+                this.props.setErrors({})
             });
     };
 
@@ -171,7 +169,7 @@ class OrderPage extends Component {
             orderInTime: undefined,
         });
         this.props.history.push('/');
-        window.location.reload(false);
+        // window.location.reload(false);
     };
 
     handleSubmit = (event) => {
@@ -204,7 +202,6 @@ class OrderPage extends Component {
         } else {
             this.handleChange(event);
         }
-
     };
 
     handleDateChange = (date) => {
@@ -267,6 +264,15 @@ class OrderPage extends Component {
         });
     };
 
+    addBread = () => {
+        this.setState({
+            order: {
+                ...this.state.order,
+                breadList: [...this.state.order.breadList.filter(b => b.quantity > 0), this.newBreadOrder()]
+            }
+        });
+    };
+
     removeBread = (breadIndex) => {
         this.setState({
             order: {
@@ -282,18 +288,9 @@ class OrderPage extends Component {
             || new SwissDate(date.toDate()).dayDifference(SwissDate.now()) < 1;
     };
 
-    addBread = () => {
-        this.setState({
-            order: {
-                ...this.state.order,
-                breadList: [...this.state.order.breadList.filter(b => b.quantity > 0), this.newBreadOrder()]
-            }
-        });
-    };
-
     render() {
 
-        const {classes, data: {idToBread, idToLoc}} = this.props;
+        const {classes, data: {idToBread, idToLoc}, UI: {loading, errors}} = this.props;
 
         const breads = Object.values(idToBread)
             .sort((l, r) => l.name.localeCompare(r.name));
@@ -317,7 +314,8 @@ class OrderPage extends Component {
                                 variant='outlined'
                                 name='locationID'
                                 value={this.state.order.locationID}
-                                error={!!this.state.errors.locationID}
+                                disabled={loading}
+                                error={!!errors.locationID}
                                 onChange={(event) => this.handleLocChange(event, idToLoc)}
                                 displayEmpty
                                 fullWidth
@@ -336,7 +334,8 @@ class OrderPage extends Component {
                                 format="DD/MM/YYYY"
                                 name="locationDate"
                                 value={this.state.order.locationDate}
-                                error={!!this.state.errors.locationDate}
+                                disabled={loading}
+                                error={!!errors.locationDate}
                                 onChange={this.handleDateChange}
                                 shouldDisableDate={this.shouldDisableDate}
                                 fullWidth
@@ -351,7 +350,8 @@ class OrderPage extends Component {
                                             variant='outlined'
                                             name='breadID'
                                             value={breadOrder.breadID}
-                                            error={!!this.state.errors[`breadList_breadID_${index}`]}
+                                            disabled={loading}
+                                            error={!!errors[`breadList_breadID_${index}`]}
                                             onChange={(event) => this.handleBreadChange(event, index)}
                                             displayEmpty
                                             fullWidth
@@ -372,7 +372,8 @@ class OrderPage extends Component {
                                             variant='outlined'
                                             name='quantity'
                                             value={breadOrder.quantity}
-                                            error={!!this.state.errors[`breadList_quantity_${index}`]}
+                                            disabled={loading}
+                                            error={!!errors[`breadList_quantity_${index}`]}
                                             onChange={(event) => this.handleQuantityChange(event, index)}
                                             InputProps={{
                                                 endAdornment: <InputAdornment position="end">
@@ -406,7 +407,7 @@ class OrderPage extends Component {
                                 variant='contained'
                                 color='primary'
                                 endIcon={<AddIcon/>}
-                                disabled={this.state.loading}
+                                disabled={loading}
                             >
                                 Ajouter un pain
                             </Button>
@@ -419,7 +420,7 @@ class OrderPage extends Component {
                                 variant='contained'
                                 color='primary'
                                 endIcon={<SendIcon/>}
-                                disabled={this.state.loading}
+                                disabled={loading}
                             >
                                 {this.state.order.orderID ? 'Appliquer les changements' : 'Passer commande'}
                             </Button>
@@ -432,7 +433,7 @@ class OrderPage extends Component {
                                 variant='contained'
                                 color='primary'
                                 endIcon={<ClearIcon/>}
-                                disabled={this.state.loading}
+                                disabled={loading}
                             >
                                 Annuler
                             </Button>
@@ -448,7 +449,7 @@ class OrderPage extends Component {
                                     variant='contained'
                                     color='primary'
                                     endIcon={<DeleteIcon/>}
-                                    disabled={this.state.loading}
+                                    disabled={loading}
                                 >
                                     Supprimer
                                 </Button>
@@ -456,7 +457,7 @@ class OrderPage extends Component {
                     </Grid>
                 </form>
 
-                {this.state.loading && (
+                {loading && (
                     <Grid className={classes.progressContainer} item sm={6} xs={10}>
                         <LinearProgress/>
                     </Grid>
@@ -510,11 +511,20 @@ class OrderPage extends Component {
 OrderPage.propTypes = {
     order: PropTypes.object,
     data: PropTypes.object.isRequired,
+    setLoading: PropTypes.func.isRequired,
+    setErrors: PropTypes.func.isRequired,
+    updateSelectedOrder: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
     data: state.data,
-    // UI: state.UI,
+    UI: state.UI,
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(OrderPage));
+const mapActionToProps = {
+    setLoading,
+    setErrors,
+    updateSelectedOrder,
+};
+
+export default connect(mapStateToProps, mapActionToProps)(withStyles(styles)(OrderPage));

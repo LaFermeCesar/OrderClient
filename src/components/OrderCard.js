@@ -15,6 +15,9 @@ import RepeatIcon from "@material-ui/icons/Replay";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SwissDate from "../util/swiss_date";
 import IconButton from "@material-ui/core/IconButton";
+import PropTypes from "prop-types";
+import {editOrder, repeatOrder} from "../redux/actions/dataAction";
+import {connect} from "react-redux";
 
 const styles = {
     card: {
@@ -37,23 +40,11 @@ const styles = {
 class OrderCard extends Component {
 
     editClicked = () => {
-        this.props.history.push({
-            pathname: '/order',
-            order: this.props.order,
-        });
+        this.props.editOrder(this.props.order, this.props.history);
     };
 
     repeatClicked = () => {
-        const order = {
-            ...this.props.order,
-        }
-        delete order.orderID;
-        delete order.locationDate;
-
-        this.props.history.push({
-            pathname: '/order',
-            order,
-        });
+        this.props.repeatOrder(this.props.order, this.props.history);
     };
 
     render() {
@@ -70,11 +61,7 @@ class OrderCard extends Component {
         }
 
         const BlackIconButton = styled(IconButton)({
-            // background: '#f44336',
             color: 'black',
-            // "&:hover": {
-            //     background: '#cd362a',
-            // },
         });
 
         return (
@@ -120,4 +107,17 @@ class OrderCard extends Component {
     }
 }
 
-export default withRouter(withStyles(styles)(OrderCard));
+OrderCard.propTypes = {
+    order: PropTypes.object.isRequired,
+    editOrder: PropTypes.func.isRequired,
+    repeatOrder: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = state => ({});
+
+const mapActionToProps = {
+    editOrder,
+    repeatOrder,
+};
+
+export default connect(mapStateToProps, mapActionToProps)(withRouter(withStyles(styles)(OrderCard)));

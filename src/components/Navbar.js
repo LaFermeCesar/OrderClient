@@ -14,6 +14,8 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import IconButton from "@material-ui/core/IconButton";
 import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
+import {newOrder} from "../redux/actions/dataAction";
+import {withRouter} from "react-router-dom";
 
 const {Link} = require("react-router-dom");
 
@@ -55,8 +57,7 @@ class Navbar extends Component {
                             <Button
                                 {...btnProps}
                                 endIcon={<AddCircle/>}
-                                component={Link}
-                                to="/order"
+                                onClick={() => this.props.newOrder(this.props.history)}
                             >
                                 Commander
                             </Button>
@@ -97,8 +98,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapActionsToProps = {
+    newOrder,
     logoutUser,
 };
 
 
-export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Navbar));
+export default connect(mapStateToProps, mapActionsToProps)(withRouter(withStyles(styles)(Navbar)));
