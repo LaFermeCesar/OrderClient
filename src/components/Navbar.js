@@ -16,12 +16,17 @@ import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {newOrder} from "../redux/actions/dataAction";
 import {withRouter} from "react-router-dom";
+import BackIcon from '@material-ui/icons/ArrowBack';
 
 const {Link} = require("react-router-dom");
 
 
 const styles = {
-    logoutButton: {
+    leftButton: {
+        display: 'inline-block',
+        float: 'left',
+    },
+    rightButton: {
         display: 'inline-block',
         float: 'right',
     },
@@ -47,8 +52,20 @@ class Navbar extends Component {
         return (authenticated &&
             <AppBar>
                 <Toolbar className="nav-container">
+
+                    {this.props.location.pathname === '/order' && (
+                        <IconButton
+                            {...btnProps}
+                            className={classes.leftButton}
+                            component={Link}
+                            to="/">
+                            <BackIcon/>
+                        </IconButton>
+                    )}
+
                     <Box className={classes.navbarMenu}>
-                        {this.props.location.pathname !== '/' && (<Box component="span" m={1}>
+                        {this.props.location.pathname !== '/' && (
+                            <Box component="span" m={1}>
                                 <Button {...btnProps} component={Link} to="/" startIcon={<HomeIcon/>}>
                                     Accueil
                                 </Button>
@@ -75,15 +92,17 @@ class Navbar extends Component {
                             </Box>)
                         }
                     </Box>
+
                     <IconButton
                         {...btnProps}
-                        className={classes.logoutButton}
+                        className={classes.rightButton}
                         onClick={this.handleLogout}
                         component={Link}
                         to="/"
                     >
                         <ExitToAppIcon/>
                     </IconButton>
+
                 </Toolbar>
             </AppBar>
         );

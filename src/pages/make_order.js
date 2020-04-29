@@ -11,7 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import AddIcon from '@material-ui/icons/Add';
 import SendIcon from '@material-ui/icons/Send';
-import ClearIcon from '@material-ui/icons/Clear';
+import BackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -417,6 +417,20 @@ class OrderPage extends Component {
                                 Ajouter produit
                             </Button>
                         </Grid>
+
+                        <Grid className={classes.buttonContainer} item md={3} xs={12}>
+                            <Button
+                                className={classes.button}
+                                onClick={this.handleCancelClicked}
+                                variant='contained'
+                                color='primary'
+                                endIcon={<BackIcon/>}
+                                disabled={loading}
+                            >
+                                Retour
+                            </Button>
+                        </Grid>
+
                         <Grid className={classes.buttonContainer} item md={4 + !this.state.order.orderID} xs={12}>
 
                             <Button
@@ -427,24 +441,11 @@ class OrderPage extends Component {
                                 endIcon={<SendIcon/>}
                                 disabled={loading}
                             >
-                                {this.state.order.orderID ? 'Appliquer les changements' : 'Passer commande'}
-                            </Button>
-                        </Grid>
-                        <Grid className={classes.buttonContainer} item md={3} xs={12}>
-
-                            <Button
-                                className={classes.button}
-                                onClick={this.handleCancelClicked}
-                                variant='contained'
-                                color='primary'
-                                endIcon={<ClearIcon/>}
-                                disabled={loading}
-                            >
-                                Annuler
+                                {this.state.order.orderID ? 'Appliquer changements' : 'Passer commande'}
                             </Button>
                         </Grid>
 
-                        {this.state.order.orderID ? (
+                        {this.state.order.orderID && (
                             <Grid className={classes.buttonContainer} item md={2} xs={12}>
                                 <Button
                                     className={classes.button}
@@ -454,9 +455,10 @@ class OrderPage extends Component {
                                     endIcon={<DeleteIcon/>}
                                     disabled={loading}
                                 >
-                                    Supprimer
+                                    Supprimer commande
                                 </Button>
-                            </Grid>) : ''}
+                            </Grid>)
+                        }
                     </Grid>
                 </form>
 
