@@ -48,7 +48,7 @@ const styles = {
         height: 0.1,
     },
     multipleOf: {
-        fontSize: '80%',
+        fontSize: '70%',
         paddingLeft: 5,
         display: 'inline-block',
         fontStyle: 'italic',
@@ -280,7 +280,7 @@ class OrderPage extends Component {
         return (
             <Container>
                 <form noValidate className={classes.form} onSubmit={this.handleSubmit}>
-                    <Grid container spacing={3} className={classes.gridContainer}>
+                    <Grid container spacing={1} className={classes.gridContainer}>
                         <Grid className={classes.fieldContainer} item md={6} xs={12}>
                             <Select
                                 variant='outlined'
@@ -363,15 +363,16 @@ class OrderPage extends Component {
                                                     </InputAdornment>,
                                             }}
                                             inputProps={{
-                                                min: '0',
-                                                step: `${breadOrder.bread.unitStep}`,
+                                                min: 0,
+                                                step: breadOrder.bread.unitStep,
+                                                max: 100,
                                             }}
                                             fullWidth
                                         />
                                     </Grid>
                                     <Grid className={classes.fieldContainer} item md={3} xs={6}>
                                         <div className={classes.multipleOf}>
-                                            (multiple de {breadOrder.bread.unitStep} accepté)
+                                            (multiples de {breadOrder.bread.unitStep} acceptés)
                                         </div>
                                     </Grid>
                                     <Grid className={classes.fieldContainer} item md={1} xs={2}>

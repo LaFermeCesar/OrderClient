@@ -76,7 +76,7 @@ class LoginPage extends Component {
         return (
             <Container>
                 <form noValidate onSubmit={this.handleSubmit}>
-                    <Grid container spacing={3} className={classes.form}>
+                    <Grid container spacing={1} className={classes.form}>
                         <Grid item sm/>
                         <Grid item sm>
                             <img className={classes.image} src={AppLogo} alt='company logo'/>
