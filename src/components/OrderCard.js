@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import dayjs from "dayjs";
-import {pad} from "../util/utils";
+import {toOrderNumber} from "../util/utils";
 import {withRouter} from "react-router-dom";
 import {styled} from "@material-ui/styles";
 import InfoIcon from "@material-ui/icons/Info";
@@ -70,7 +70,7 @@ class OrderCard extends Component {
             <Card variant='outlined' className={classes.card}>
                 <CardContent className={classes.cardContent}>
                     <Typography variant='h6'>
-                        Commande n°{pad(parseInt(order.orderID.slice(0, 4), 36), 8)}
+                        Commande n°{toOrderNumber(order.orderID)}
                     </Typography>
                     <Typography variant='body2'>
                         Lieu: {order.location.name}

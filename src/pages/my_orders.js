@@ -20,7 +20,7 @@ const styles = {
     },
     ordersTitle: {
         textAlign: 'center',
-        margin: '10px 0 10px 0',
+        margin: '5px 0 10px 0',
     },
     orderCard: {
         marginBottom: 5,

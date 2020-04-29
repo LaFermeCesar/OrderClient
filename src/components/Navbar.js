@@ -17,7 +17,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import {newOrder} from "../redux/actions/dataAction";
 import {withRouter} from "react-router-dom";
 import BackIcon from '@material-ui/icons/ArrowBack';
-import {pad} from "../util/utils";
+import {toOrderNumber} from "../util/utils";
 import Typography from "@material-ui/core/Typography";
 
 const {Link} = require("react-router-dom");
@@ -68,10 +68,10 @@ class Navbar extends Component {
                     <Box className={classes.navbarMenu}>
 
                         {this.props.location.pathname === '/order' &&
-                        this.props.data.order.orderID && (
+                        this.props.order.orderID && (
                             <Box component="span" m={1}>
                                 <Typography variant='h6' color='secondary'>
-                                    {pad(parseInt(this.props.data.order.orderID.slice(0, 4), 36), 8)}
+                                    {toOrderNumber(this.props.order.orderID)}
                                 </Typography>
                             </Box>
                         )}
@@ -126,14 +126,14 @@ class Navbar extends Component {
 Navbar.propTypes = {
     authenticated: PropTypes.bool.isRequired,
     isAdmin: PropTypes.bool.isRequired,
-    data: PropTypes.object.isRequired,
+    order: PropTypes.object.isRequired,
     logoutUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
     authenticated: state.user.authenticated,
     isAdmin: state.user.details.isAdmin,
-    data: state.data,
+    order: state.data.order,
 });
 
 const mapActionsToProps = {
