@@ -21,6 +21,7 @@ import {cancelOrder, postOrder, updateSelectedOrder} from "../redux/actions/data
 import OrderSuccessDialog from "../components/OrderSuccessDialog";
 import DeleteDialog from "../components/DeleteDialog";
 import {askDeleteConfirm} from "../redux/actions/uiAction";
+import Typography from "@material-ui/core/Typography";
 
 const styles = {
     form: {
@@ -51,7 +52,15 @@ const styles = {
     },
     progressContainer: {
         margin: 'auto',
-    }
+    },
+    customError: {
+        color: 'red',
+        fontSize: '0.8rem',
+        marginTop: 0,
+    },
+    errorContainer: {
+        textAlign: 'center',
+    },
 };
 
 const DEFAULT_DAYS_OF_WEEK = [2, 3, 5, 6]
@@ -89,7 +98,6 @@ class OrderPage extends Component {
                 breadList: [this.newBreadOrder()],
                 ...order,
             },
-            showDeleteAlert: false,
         };
     };
 
@@ -350,6 +358,25 @@ class OrderPage extends Component {
                                 </Fragment>
                             )
                         })}
+                        <Grid item xs={12} className={classes.errorContainer}>
+                            {(errors.locationID && (
+                                <Typography variant='body2' className={classes.customError}>
+                                    Le point de vente sélectionné est invalide
+                                </Typography>
+                            )) || (errors.locationDate && (
+                                <Typography variant='body2' className={classes.customError}>
+                                    La date sélectionnée est invalide
+                                </Typography>
+                            )) || (this.state.order.breadList.find((_, i) => errors[`breadList_breadID_${i}`]) && (
+                                <Typography variant='body2' className={classes.customError}>
+                                    Le pain sélectionné est invalide
+                                </Typography>
+                            )) || (this.state.order.breadList.find((_, i) => errors[`breadList_quantity_${i}`]) && (
+                                <Typography variant='body2' className={classes.customError}>
+                                    La quantité de pain sélectionnée est invalide
+                                </Typography>
+                            ))}
+                        </Grid>
                         <Grid className={classes.buttonContainer} item sm={3 + !this.state.order.orderID} xs={12}>
 
                             <Button

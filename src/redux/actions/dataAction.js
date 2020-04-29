@@ -120,6 +120,7 @@ export const postOrder = (order) => (dispatch) => {
                 dispatch({type: ORDER_SUCCESS_OUT_OF_TIME,})
             }
             dispatch({type: CLEAR_ERRORS,})
+            dispatch({type: CLEAR_ORDER})
         })
         .catch((err) => {
             console.log(err.response);

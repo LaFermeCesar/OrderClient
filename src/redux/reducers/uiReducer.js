@@ -16,8 +16,8 @@ const initialState = {
     showOrderSuccess: false,
     isOrderInTime: true,
 
-    orderIDToDelete: '',
     showDeleteConfirm: false,
+    orderIDToDelete: '',
 };
 
 export default function (state = initialState, action) {
@@ -66,6 +66,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 showDeleteConfirm: false,
+                orderIDToDelete: '',
             };
         default:
             return state;
