@@ -67,7 +67,7 @@ function App() {
                     <div className="App">
                         <Router>
                             <Navbar/>
-                            <div className={isAuthenticated && 'container'}>
+                            <div className='container'>
                                 <Switch>
                                     <OnlyPublicRoute exact path="/login" component={login}/>
                                     <PrivateRoute exact path="/" component={home}/>
