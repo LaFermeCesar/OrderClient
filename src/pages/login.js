@@ -9,11 +9,11 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 import AppLogo from '../images/logo.png';
 import Container from "@material-ui/core/Container";
 import qs from 'qs'
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const styles = {
     pageContainer: {
@@ -39,7 +39,7 @@ const styles = {
         marginTop: 10,
     },
     progress: {
-        position: 'absolute',
+        margin: '10px 0 10px 0'
     }
 };
 
@@ -155,10 +155,10 @@ class LoginPage extends Component {
                                 disabled={loading}
                             >
                                 Suivant
-                                {loading && (
-                                    <CircularProgress className={classes.progress} size={30}/>
-                                )}
                             </Button>
+                            {loading && (
+                                <LinearProgress className={classes.progress}/>
+                            )}
                         </Grid>
                         <Grid item sm/>
                     </Grid>
