@@ -13,6 +13,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import AppLogo from '../images/logo.png';
 import Container from "@material-ui/core/Container";
+import qs from 'qs'
 
 const styles = {
     pageContainer: {
@@ -47,10 +48,12 @@ class LoginPage extends Component {
     constructor(props) {
         super(props);
 
+        const query = qs.parse(this.props.location.search, {ignoreQueryPrefix: true})
+
         this.state = {
-            phoneNumber: '',
-            lastName: '',
-            firstName: '',
+            phoneNumber: query.phoneNumber ? query.phoneNumber : '',
+            lastName: query.lastName ? query.lastName : '',
+            firstName: query.firstName ? query.firstName : '',
         }
 
     }
