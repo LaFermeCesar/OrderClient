@@ -15,6 +15,9 @@ import AppLogo from '../images/logo.png';
 import Container from "@material-ui/core/Container";
 
 const styles = {
+    pageContainer: {
+        marginTop: -70
+    },
     form: {
         textAlign: 'center',
     },
@@ -73,7 +76,7 @@ class LoginPage extends Component {
         const {classes, UI: {loading, errors}} = this.props;
 
         return (
-            <Container>
+            <Container className={classes.pageContainer}>
                 <form noValidate onSubmit={this.handleSubmit}>
                     <Grid container spacing={1} className={classes.form}>
                         <Grid item sm/>

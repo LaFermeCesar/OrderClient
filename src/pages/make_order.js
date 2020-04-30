@@ -16,7 +16,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import SwissDate from "../util/swiss_date";
 import Container from "@material-ui/core/Container";
-import {cancelOrder, postOrder, updateSelectedOrder} from "../redux/actions/dataAction";
+import {postOrder, updateSelectedOrder} from "../redux/actions/dataAction";
 import OrderSuccessDialog from "../components/OrderSuccessDialog";
 import DeleteDialog from "../components/DeleteDialog";
 import {askDeleteConfirm} from "../redux/actions/uiAction";
@@ -145,10 +145,6 @@ class OrderPage extends Component {
 
     handleDeleteClicked = () => {
         this.props.askDeleteConfirm(this.props.data.order);
-    };
-
-    handleCancelClicked = () => {
-        this.props.cancelOrder(this.props.history);
     };
 
     handleSubmit = (event) => {
@@ -468,7 +464,6 @@ OrderPage.propTypes = {
     updateSelectedOrder: PropTypes.func.isRequired,
     postOrder: PropTypes.func.isRequired,
     askDeleteConfirm: PropTypes.func.isRequired,
-    cancelOrder: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -480,7 +475,6 @@ const mapActionToProps = {
     updateSelectedOrder,
     postOrder,
     askDeleteConfirm,
-    cancelOrder,
 };
 
 export default connect(mapStateToProps, mapActionToProps)(withStyles(styles)(OrderPage));
