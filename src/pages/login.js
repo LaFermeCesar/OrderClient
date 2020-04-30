@@ -56,11 +56,20 @@ class LoginPage extends Component {
             firstName: query.firstName ? query.firstName : '',
         }
 
+        if (this.state.phoneNumber !== '' &&
+            this.state.lastName !== '' &&
+            this.state.firstName !== ''
+        ) {
+            this.handleSubmit();
+        }
+
     }
 
 
     handleSubmit = (event) => {
-        event.preventDefault();
+        if (event) {
+            event.preventDefault();
+        }
         const userData = {
             phoneNumber: this.state.phoneNumber,
             lastName: this.state.lastName,
