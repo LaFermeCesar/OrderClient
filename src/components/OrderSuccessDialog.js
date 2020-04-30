@@ -27,24 +27,25 @@ class OrderSuccessDialog extends Component {
             >
                 <DialogTitle>{this.props.UI.isOrderInTime ? `Commande réussie` : `Commande hors délai`}</DialogTitle>
                 <DialogContent>
-                    {this.props.UI.isOrderInTime ?
-                        <DialogContentText>
-                            <p>
+                    <DialogContentText>
+                        {this.props.UI.isOrderInTime ?
+                            <div>
                                 Votre commande a bien été enregistrée.
-                            </p>
-                            <p>
-                                <b>INFO</b>: Nous sommes de retour au marché de Lausanne.
-                                Notre stand sera à la rue Saint-Laurent, entre la Coop City et la banque Clerc.
-                                ({linkMap('lien vers notre stand')})
-                            </p>
-                        </DialogContentText> :
-                        <DialogContentText>
-                            Votre commande a bien été enregistrée. Néanmoins, la production a déjà débuté.
-                            Nous ne pouvons donc pas garantir à 100% la disponibilité de tous les produits demandés.
-                            Nous ferons au mieux pour vous contacter en cas d'indisponibilité.
-                            Merci de votre compréhension.
-                        </DialogContentText>
-                    }
+                            </div> :
+                            <div>
+                                Votre commande a bien été enregistrée. Néanmoins, la production a déjà débuté.
+                                Nous ne pouvons donc pas garantir à 100% la disponibilité de tous les produits demandés.
+                                Nous ferons au mieux pour vous contacter en cas d'indisponibilité.
+                                Merci de votre compréhension.
+                            </div>
+                        }
+
+                        <div>
+                            <b>INFO</b>: Nous sommes de retour au marché de Lausanne.
+                            Notre stand sera à la rue Saint-Laurent, entre la Coop City et la banque Clerc.
+                            ({linkMap('lien vers notre stand')})
+                        </div>
+                    </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleCloseAlert} color="primary" autoFocus>

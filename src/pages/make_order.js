@@ -22,6 +22,7 @@ import DeleteDialog from "../components/DeleteDialog";
 import {askDeleteConfirm} from "../redux/actions/uiAction";
 import Typography from "@material-ui/core/Typography";
 import ListSubheader from "@material-ui/core/ListSubheader";
+import {styled} from "@material-ui/styles";
 
 const styles = {
     form: {
@@ -30,7 +31,6 @@ const styles = {
     gridContainer: {
         margin: 'auto',
         width: '100%',
-        maxWidth: 720,
     },
     fieldContainer: {
         margin: 'auto',
@@ -274,6 +274,14 @@ class OrderPage extends Component {
         const locations = Object.values(idToLoc)
             .sort((l, r) => l.name.localeCompare(r.name));
 
+        const RedButton = styled(Button)({
+            background: '#f44336',
+            color: 'white',
+            "&:hover": {
+                background: '#cd362a',
+            },
+        });
+
         return (
             <Container>
                 <form noValidate className={classes.form} onSubmit={this.handleSubmit}>
@@ -399,7 +407,7 @@ class OrderPage extends Component {
                                 </Typography>
                             ))}
                         </Grid>
-                        <Grid className={classes.buttonContainer} item md={3 + !this.state.order.orderID} xs={12}>
+                        <Grid className={classes.buttonContainer} item md={4 + !this.state.order.orderID} xs={12}>
 
                             <Button
                                 className={classes.button}
@@ -419,7 +427,7 @@ class OrderPage extends Component {
                                 className={classes.button}
                                 type='submit'
                                 variant='contained'
-                                color='primary'
+                                color='secondary'
                                 endIcon={<SendIcon/>}
                                 disabled={loading}
                             >
@@ -428,17 +436,16 @@ class OrderPage extends Component {
                         </Grid>
 
                         {this.state.order.orderID && (
-                            <Grid className={classes.buttonContainer} item md={2} xs={12}>
-                                <Button
+                            <Grid className={classes.buttonContainer} item md={4} xs={12}>
+                                <RedButton
                                     className={classes.button}
                                     onClick={this.handleDeleteClicked}
                                     variant='contained'
-                                    color='primary'
                                     endIcon={<DeleteIcon/>}
                                     disabled={loading}
                                 >
                                     Supprimer commande
-                                </Button>
+                                </RedButton>
                             </Grid>)
                         }
                     </Grid>

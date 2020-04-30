@@ -18,12 +18,16 @@ const styles = {
         marginBottom: 10,
         margin: 'auto',
     },
+    ordersContainer: {},
     ordersTitle: {
         textAlign: 'center',
         margin: '5px 0 10px 0',
     },
     orderCard: {
         marginBottom: 5,
+    },
+    noOrderText: {
+        textAlign: 'center',
     },
 };
 
@@ -42,7 +46,8 @@ class MyOrdersPage extends Component {
                 if (loading) {
                     return <LinearProgress/>
                 }
-                return <Typography variant="body1">Aucune commande pour le moment</Typography>
+                return <Typography className={classes.noOrderText} variant="body1">Aucune commande pour le
+                    moment</Typography>
             }
             return orders.map(order =>
                 <div className={classes.orderCard} key={order.orderID}>
