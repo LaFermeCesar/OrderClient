@@ -51,7 +51,7 @@ class AdminPage extends Component {
 
     handleDownload = (url, date, filename) => () => {
         const params = {date: date}
-        filename = `${filename}_${dayjs(date).format('YYYY-MM-DD')}.xlsx`
+        filename = `${filename}_${dayjs(date).format('YYYY-MM-DD-HH-MM')}.xlsx`
         http.get(url, {
             responseType: 'arraybuffer',
             params,
