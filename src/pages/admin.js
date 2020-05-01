@@ -11,6 +11,9 @@ import SwissDate from "../util/swiss_date";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import http from '../util/http'
+import TextField from "@material-ui/core/TextField";
+import dayjs from "dayjs";
+import {editOrder} from "../redux/actions/dataAction";
 
 const styles = {
     fieldContainer: {
@@ -25,12 +28,17 @@ class AdminPage extends Component {
 
     constructor(props) {
         super(props);
-
-
         this.state = {
             marketDate: SwissDate.next(MARKET_DAYS).string,
+            orderNumber: '',
         };
     }
+
+    handleChange = (event) => {
+        this.setState({
+            [event.target.name]: event.target.value
+        })
+    };
 
     handleDateChange = (date) => {
         const dateString = new SwissDate(date.toDate()).string;
@@ -41,23 +49,33 @@ class AdminPage extends Component {
 
     shouldDisableDate = (date) => !MARKET_DAYS.includes(new SwissDate(date.toDate()).day);
 
-    downloadFile = (url, params, filename) => {
-        http
-            .get(url, {
-                responseType: 'arraybuffer',
-                // headers: {
-                //     'Content-Type': 'application/json',
-                //     'Accept': 'application/xlsx'
-                // },
-                params,
-            })
-            .then((response) => {
-                const url = window.URL.createObjectURL(new Blob([response.data]));
+    handleDownload = (url, date, filename) => () => {
+        const params = {date: date}
+        filename = `${filename}_${dayjs(date).format('YYYY-MM-DD')}.xlsx`
+        http.get(url, {
+            responseType: 'arraybuffer',
+            params,
+        })
+            .then((res) => {
+                const url = window.URL.createObjectURL(new Blob([res.data]));
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', `${filename}.xlsx`); //or any other extension
+                link.setAttribute('download', filename); //or any other extension
                 document.body.appendChild(link);
                 link.click();
+            })
+    }
+
+    handleModifyOrder = () => {
+        http.post('/order_number', {orderNumber: this.state.orderNumber})
+            .then(res => {
+                const order = res.data
+                if (order && order.orderID) {
+                    this.props.editOrder(order, this.props.history)
+                }
+            })
+            .catch(err => {
+                console.log(err.response)
             })
     }
 
@@ -86,23 +104,39 @@ class AdminPage extends Component {
                         />
                     </Grid>
 
-                    <Grid className={classes.fieldContainer} item>
+                    <Grid className={classes.fieldContainer} item sm={6} xs={12}>
                         <Button variant='contained' color='primary'
-                                onClick={() => this.downloadFile('/quantity_sheet', {
-                                    date: this.state.marketDate,
-                                }, 'quantites')}
+                                onClick={this.handleDownload('/quantity_sheet', this.state.marketDate, 'quantites')}
                         >
                             Télécharger les quantités
                         </Button>
                     </Grid>
 
-                    <Grid className={classes.fieldContainer} item xs={12}>
+                    <Grid className={classes.fieldContainer} item sm={6} xs={12}>
                         <Button variant='contained' color='primary'
-                                onClick={() => this.downloadFile('/orders_sheet', {
-                                    date: this.state.marketDate,
-                                }, 'commandes')}
+                                onClick={this.handleDownload('/orders_sheet', this.state.marketDate, 'commandes')}
                         >
                             Télécharger les commandes
+                        </Button>
+                    </Grid>
+
+                    <Grid className={classes.fieldContainer} item sm={6} xs={12}>
+                        <TextField
+                            className={classes.textField}
+                            variant='outlined'
+                            id='orderNumber'
+                            name='orderNumber'
+                            label='Numéro de commande'
+                            value={this.state.orderNumber}
+                            onChange={this.handleChange}
+                            fullWidth/>
+                    </Grid>
+
+                    <Grid className={classes.fieldContainer} item sm={6} xs={12}>
+                        <Button variant='contained' color='primary'
+                                onClick={this.handleModifyOrder}
+                        >
+                            Modifier la commande
                         </Button>
                     </Grid>
 
@@ -114,12 +148,15 @@ class AdminPage extends Component {
 
 AdminPage.propTypes = {
     data: PropTypes.object.isRequired,
+    editOrder: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
     data: state.data,
 });
 
-const mapActionToProps = {};
+const mapActionToProps = {
+    editOrder
+};
 
 export default connect(mapStateToProps, mapActionToProps)(withStyles(styles)(AdminPage));
