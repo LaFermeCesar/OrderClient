@@ -262,7 +262,7 @@ class OrderPage extends Component {
 
     shouldDisableDate = (date) => {
         return !this.state.order.location.daysOfWeek.includes(new SwissDate(date.toDate()).day)
-            || new SwissDate(date.toDate()).dayDifference(SwissDate.now()) < 1;
+            || new SwissDate(date.toDate()).dayDifference(SwissDate.now()) < 1 - this.state.order.location.isMarket;
     };
 
     render() {
