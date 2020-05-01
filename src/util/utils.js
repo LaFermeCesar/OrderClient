@@ -5,7 +5,3 @@ export const pad = (num, size) => {
     }
     return s;
 }
-
-export const toOrderNumber = (orderID) => {
-    return pad(parseInt(orderID.slice(0, 4), 36), 8)
-}

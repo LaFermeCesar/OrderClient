@@ -17,8 +17,8 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import {newOrder} from "../redux/actions/dataAction";
 import {withRouter} from "react-router-dom";
 import BackIcon from '@material-ui/icons/ArrowBack';
-import {toOrderNumber} from "../util/utils";
 import Typography from "@material-ui/core/Typography";
+import {toNumber} from "../util/id_number";
 
 const {Link} = require("react-router-dom");
 
@@ -71,7 +71,7 @@ class Navbar extends Component {
                         this.props.order.orderID && (
                             <Box component="span" m={1}>
                                 <Typography variant='h6' color='secondary'>
-                                    {toOrderNumber(this.props.order.orderID)}
+                                    {toNumber(this.props.order.orderID)}
                                 </Typography>
                             </Box>
                         )}

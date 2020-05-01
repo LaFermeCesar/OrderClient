@@ -7,7 +7,6 @@ import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import dayjs from "dayjs";
-import {toOrderNumber} from "../util/utils";
 import {withRouter} from "react-router-dom";
 import {styled} from "@material-ui/styles";
 import InfoIcon from "@material-ui/icons/Info";
@@ -19,6 +18,7 @@ import PropTypes from "prop-types";
 import {editOrder, repeatOrder} from "../redux/actions/dataAction";
 import {connect} from "react-redux";
 import {askDeleteConfirm} from "../redux/actions/uiAction";
+import {toNumber} from "../util/id_number";
 
 const styles = {
     card: {
@@ -70,7 +70,7 @@ class OrderCard extends Component {
             <Card variant='outlined' className={classes.card}>
                 <CardContent className={classes.cardContent}>
                     <Typography variant='h6'>
-                        Commande n°{toOrderNumber(order.orderID)}
+                        Commande n°{toNumber(order.orderID)}
                     </Typography>
                     <Typography variant='body2'>
                         Lieu: {order.location.name}
