@@ -316,21 +316,7 @@ class OrderPage extends Component {
                                     <MenuItem key={loc.locationID} value={loc.locationID}>{loc.name}</MenuItem>))}
                             </Select>
                         </Grid>
-                        <Grid className={classes.fieldContainer} item md={3} xs={12}>
-                            <DatePicker
-                                clearable
-                                variant='outlined'
-                                format="DD/MM/YYYY"
-                                name="locationDate"
-                                value={this.state.order.locationDate}
-                                disabled={loading || this.state.order.isRecurrent}
-                                error={!!errors.locationDate}
-                                onChange={this.handleDateChange}
-                                shouldDisableDate={this.shouldDisableDate}
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid className={classes.fieldContainer} item md={3} xs={12}>
+                        <Grid className={classes.fieldContainer} item md={3 + this.state.order.isRecurrent * 3} xs={12}>
                             <FormControlLabel
                                 control={
                                     <Switch
@@ -344,6 +330,20 @@ class OrderPage extends Component {
                                 label="Chaque semaine"
                             />
                         </Grid>
+                        {!this.state.order.isRecurrent && (<Grid className={classes.fieldContainer} item md={3} xs={12}>
+                            <DatePicker
+                                clearable
+                                variant='outlined'
+                                format="DD/MM/YYYY"
+                                name="locationDate"
+                                value={this.state.order.locationDate}
+                                disabled={loading || this.state.order.isRecurrent}
+                                error={!!errors.locationDate}
+                                onChange={this.handleDateChange}
+                                shouldDisableDate={this.shouldDisableDate}
+                                fullWidth
+                            />
+                        </Grid>)}
                         {this.state.order.breadList.map((breadOrder, index) => {
                             return (
                                 <Fragment key={index}>
@@ -494,6 +494,7 @@ class OrderPage extends Component {
 OrderPage.propTypes = {
     order: PropTypes.object,
     data: PropTypes.object.isRequired,
+    UI: PropTypes.object.isRequired,
     updateSelectedOrder: PropTypes.func.isRequired,
     postOrder: PropTypes.func.isRequired,
     askDeleteConfirm: PropTypes.func.isRequired,
