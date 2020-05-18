@@ -14,11 +14,16 @@ import http from '../util/http'
 import TextField from "@material-ui/core/TextField";
 import dayjs from "dayjs";
 import {editOrder} from "../redux/actions/dataAction";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const styles = {
     fieldContainer: {
         margin: 'auto',
         textAlign: 'center',
+    },
+    progress: {
+        margin: '10px auto 10px auto',
+        width: '50%',
     },
 };
 
@@ -31,6 +36,7 @@ class AdminPage extends Component {
         this.state = {
             marketDate: SwissDate.next(MARKET_DAYS).string,
             orderNumber: '',
+            loading: false,
         };
     }
 
@@ -52,10 +58,11 @@ class AdminPage extends Component {
     handleDownload = (url, date, fname) => () => {
         const params = {date: date}
         const filename = `${fname}_${dayjs(date).format('YYYY-MM-DD')}.xlsx`
-        http.get(url, {
-            responseType: 'arraybuffer',
-            params,
+
+        this.setState({
+            loading: true,
         })
+        http.get(url, {responseType: 'arraybuffer', params,})
             .then((res) => {
                 const url = window.URL.createObjectURL(new Blob([res.data]));
                 const link = document.createElement('a');
@@ -64,9 +71,20 @@ class AdminPage extends Component {
                 document.body.appendChild(link);
                 link.click();
             })
+            .catch(err => {
+                console.log(err.response)
+            })
+            .finally(() => {
+                this.setState({
+                    loading: false,
+                })
+            })
     }
 
     handleModifyOrder = () => {
+        this.setState({
+            loading: true,
+        })
         http.post('/order_number', {orderNumber: this.state.orderNumber})
             .then(res => {
                 const order = res.data
@@ -77,6 +95,11 @@ class AdminPage extends Component {
             .catch(err => {
                 console.log(err.response)
             })
+            .finally(() => {
+                this.setState({
+                    loading: false,
+                })
+            })
     }
 
     render() {
@@ -86,7 +109,6 @@ class AdminPage extends Component {
             <Container>
 
                 <Grid container spacing={3}>
-
                     <Grid className={classes.fieldContainer} item sm={6} xs={12}>
                         <Typography variant='body1'>Pour le marché du:</Typography>
                     </Grid>
@@ -100,12 +122,15 @@ class AdminPage extends Component {
                             value={this.state.marketDate}
                             onChange={this.handleDateChange}
                             shouldDisableDate={this.shouldDisableDate}
+                            disabled={this.state.loading}
                             fullWidth
                         />
                     </Grid>
 
                     <Grid className={classes.fieldContainer} item sm={6} xs={12}>
-                        <Button variant='contained' color='primary'
+                        <Button variant='contained'
+                                color='primary'
+                                disabled={this.state.loading}
                                 onClick={this.handleDownload('/quantity_sheet', this.state.marketDate, 'quantites')}
                         >
                             Télécharger les quantités
@@ -113,7 +138,9 @@ class AdminPage extends Component {
                     </Grid>
 
                     <Grid className={classes.fieldContainer} item sm={6} xs={12}>
-                        <Button variant='contained' color='primary'
+                        <Button variant='contained'
+                                color='primary'
+                                disabled={this.state.loading}
                                 onClick={this.handleDownload('/orders_sheet', this.state.marketDate, 'commandes')}
                         >
                             Télécharger les commandes
@@ -129,18 +156,23 @@ class AdminPage extends Component {
                             label='Numéro de commande'
                             value={this.state.orderNumber}
                             onChange={this.handleChange}
+                            disabled={this.state.loading}
                             fullWidth/>
                     </Grid>
 
                     <Grid className={classes.fieldContainer} item sm={6} xs={12}>
-                        <Button variant='contained' color='primary'
+                        <Button variant='contained'
+                                color='primary'
+                                disabled={this.state.loading}
                                 onClick={this.handleModifyOrder}
                         >
                             Modifier la commande
                         </Button>
                     </Grid>
-
                 </Grid>
+                {this.state.loading && (
+                    <LinearProgress className={classes.progress}/>
+                )}
             </Container>
         );
     }
