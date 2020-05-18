@@ -3,9 +3,10 @@ import {
     CLEAR_ERRORS,
     HIDE_DELETE_CONFIRM,
     LOADING_UI,
+    LOGOUT,
+    ORDER_SUCCESS_DONE,
     ORDER_SUCCESS_IN_TIME,
     ORDER_SUCCESS_OUT_OF_TIME,
-    ORDER_SUCESS_DONE,
     SET_ERRORS
 } from '../types'
 
@@ -22,6 +23,8 @@ const initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {
+        case LOGOUT:
+            return initialState;
         case LOADING_UI:
             return {
                 ...state,
@@ -51,7 +54,7 @@ export default function (state = initialState, action) {
                 showOrderSuccess: true,
                 isOrderInTime: false,
             };
-        case ORDER_SUCESS_DONE:
+        case ORDER_SUCCESS_DONE:
             return {
                 ...state,
                 showOrderSuccess: false,

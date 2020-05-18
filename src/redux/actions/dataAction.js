@@ -9,52 +9,39 @@ import {
     SET_ERRORS,
     SET_FUTURE_ORDERS,
     SET_ORDER,
-    SET_PAST_ORDERS
+    SET_PAST_ORDERS,
+    SET_RECURRENT_ORDERS
 } from '../types';
 
 import http from '../../util/http'
 import SwissDate from "../../util/swiss_date";
 
-export const getFutureOrders = () => (dispatch) => {
+
+export const getOrders = () => (dispatch) => {
     dispatch({type: LOADING_DATA});
-    http.get('/future_orders')
-        .then((res) =>
+    http.get('/orders')
+        .then(res => {
+            const {future, past, recurrent} = res.data
             dispatch({
                 type: SET_FUTURE_ORDERS,
-                payload: res.data,
-            }))
-        .catch(err => {
-            console.log(err.response);
-            if (err.status === 403) {
-                window.location.reload(false);
-            }
-            dispatch({
-                type: SET_FUTURE_ORDERS,
-                payload: [],
+                payload: future,
             })
-        })
-};
-
-
-export const getPastOrders = () => (dispatch) => {
-    dispatch({type: LOADING_DATA});
-    http.get('/past_orders')
-        .then(res => dispatch({
-            type: SET_PAST_ORDERS,
-            payload: res.data,
-        }))
-        .catch(err => {
-            console.log(err.response);
-            if (err.status === 403) {
-                window.location.reload(false);
-            }
             dispatch({
                 type: SET_PAST_ORDERS,
-                payload: [],
+                payload: past,
+            })
+            dispatch({
+                type: SET_RECURRENT_ORDERS,
+                payload: recurrent,
             })
         })
-};
-
+        .catch(err => {
+            console.log(err.response);
+            if (err.status === 403) {
+                window.location.href('/login');
+            }
+        })
+}
 
 export const newOrder = (history) => (dispatch) => {
     dispatch({type: CLEAR_ERRORS,})

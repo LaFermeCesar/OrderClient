@@ -2,27 +2,26 @@ import axios from 'axios';
 
 const BASE_URL = `https://europe-west1-orders-lfc.cloudfunctions.net/api`;
 
-let auth = '';
+let authToken;
+
+const addAuthHeader = (data, headers) => {
+    if (authToken !== undefined) {
+        headers['Authorization'] = `Bearer ${authToken}`
+    }
+    return data;
+}
 
 const http = axios.create({
     baseURL: BASE_URL,
-    transformRequest: [function (data, headers) {
-        headers['Authorization'] = auth
-        return JSON.stringify(data);
-    }],
-    headers: {
-        'Content-Type': 'application/json'
-    }
+    transformRequest: [addAuthHeader, ...axios.defaults.transformRequest],
 });
 
 http.setToken = (token) => {
-    // axios.defaults.headers.common['Authorization'] = token;
-    auth = token;
+    authToken = token;
 }
 
 http.removeToken = () => {
-    // delete axios.defaults.headers.common['Authorization'];
-    auth = '';
+    authToken = undefined;
 }
 
 export default http;

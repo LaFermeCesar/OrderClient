@@ -5,7 +5,7 @@ import OrderCard from '../components/OrderCard'
 import withStyles from "@material-ui/core/styles/withStyles";
 
 import {connect} from 'react-redux'
-import {getFutureOrders, getPastOrders} from "../redux/actions/dataAction";
+import {getOrders} from "../redux/actions/dataAction";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -34,8 +34,7 @@ const styles = {
 class MyOrdersPage extends Component {
 
     componentDidMount() {
-        this.props.getFutureOrders();
-        this.props.getPastOrders();
+        this.props.getOrders();
     }
 
     render() {
@@ -82,8 +81,7 @@ class MyOrdersPage extends Component {
 }
 
 MyOrdersPage.propTypes = {
-    getFutureOrders: PropTypes.func.isRequired,
-    getPastOrders: PropTypes.func.isRequired,
+    getOrders: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
 };
 
@@ -92,8 +90,7 @@ const mapStateToProps = state => ({
 });
 
 const mapActionToProps = {
-    getFutureOrders,
-    getPastOrders,
+    getOrders,
 };
 
 export default connect(mapStateToProps, mapActionToProps)(withStyles(styles)(MyOrdersPage));

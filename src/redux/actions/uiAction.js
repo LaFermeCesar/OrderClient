@@ -1,7 +1,7 @@
-import {ASK_DELETE_CONFIRM, HIDE_DELETE_CONFIRM, ORDER_SUCESS_DONE} from "../types";
+import {ASK_DELETE_CONFIRM, HIDE_DELETE_CONFIRM, ORDER_SUCCESS_DONE} from "../types";
 
 export const orderSuccessDone = () => (dispatch) => {
-    dispatch({type: ORDER_SUCESS_DONE})
+    dispatch({type: ORDER_SUCCESS_DONE})
 }
 
 export const askDeleteConfirm = (order) => (dispatch) => {

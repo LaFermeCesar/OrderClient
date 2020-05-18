@@ -3,11 +3,11 @@ import http from '../../util/http'
 import {
     CLEAR_ERRORS,
     LOADING_UI,
+    LOGOUT,
     SET_AUTHENTICATED,
     SET_BREADS,
     SET_ERRORS,
     SET_LOCATIONS,
-    SET_UNAUTHENTICATED,
     SET_USER
 } from '../types'
 
@@ -48,7 +48,7 @@ export const loginUser = (userData, history) => (dispatch) => {
             });
             localStorage.setItem('userDetails', JSON.stringify(userDetails));
 
-            const firebaseToken = `Bearer ${res.data.token}`;
+            const firebaseToken = res.data.token;
             localStorage.setItem('FBToken', firebaseToken);
             http.setToken(firebaseToken);
 
@@ -76,5 +76,5 @@ export const loginUser = (userData, history) => (dispatch) => {
 export const logoutUser = () => (dispatch) => {
     localStorage.removeItem('FBToken');
     http.removeToken();
-    dispatch({type: SET_UNAUTHENTICATED})
+    dispatch({type: LOGOUT})
 };

@@ -1,19 +1,25 @@
 import {
     CLEAR_ORDER,
     LOADING_DATA,
+    LOGOUT,
     SET_BREADS,
     SET_FUTURE_ORDERS,
     SET_LOCATIONS,
     SET_ORDER,
-    SET_PAST_ORDERS
+    SET_PAST_ORDERS,
+    SET_RECURRENT_ORDERS
 } from '../types';
 
 const initialState = {
     order: {},
+
     futureOrders: [],
     pastOrders: [],
+    recurrentOrders: [],
+
     idToBread: {},
     idToLoc: {},
+
     loading: 0,
 };
 
@@ -30,6 +36,8 @@ const toOrders = (orders, idToBread, idToLoc) => {
 
 export default function (state = initialState, action) {
     switch (action.type) {
+        case LOGOUT:
+            return initialState;
         case LOADING_DATA:
             return {
                 ...state,
@@ -45,6 +53,12 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 pastOrders: toOrders(action.payload, state.idToBread, state.idToLoc),
+                loading: Math.max(0, state.loading - 1),
+            };
+        case SET_RECURRENT_ORDERS:
+            return {
+                ...state,
+                recurrentOrders: toOrders(action.payload, state.idToBread, state.idToLoc),
                 loading: Math.max(0, state.loading - 1),
             };
         case SET_BREADS:

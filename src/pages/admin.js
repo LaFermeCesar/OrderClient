@@ -49,9 +49,9 @@ class AdminPage extends Component {
 
     shouldDisableDate = (date) => !MARKET_DAYS.includes(new SwissDate(date.toDate()).day);
 
-    handleDownload = (url, date, filename) => () => {
+    handleDownload = (url, date, fname) => () => {
         const params = {date: date}
-        filename = `${filename}_${dayjs(date).format('YYYY-MM-DD-HH-MM')}.xlsx`
+        const filename = `${fname}_${dayjs(date).format('YYYY-MM-DD')}.xlsx`
         http.get(url, {
             responseType: 'arraybuffer',
             params,
