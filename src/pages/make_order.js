@@ -23,6 +23,8 @@ import {askDeleteConfirm} from "../redux/actions/uiAction";
 import Typography from "@material-ui/core/Typography";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import {styled} from "@material-ui/styles";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 
 const styles = {
     form: {
@@ -96,6 +98,7 @@ class OrderPage extends Component {
         this.state = {
             order: {
                 locationDate: SwissDate.now().plus(1).next(daysOfWeek).string,
+                isRecurrent: false,
                 locationID: '',
                 location: {
                     name: '',
@@ -151,6 +154,15 @@ class OrderPage extends Component {
         event.preventDefault();
         this.handlePostClicked();
     };
+
+    handleIsRecurrent = () => {
+        this.setState({
+            order: {
+                ...this.state.order,
+                isRecurrent: !this.state.order.isRecurrent
+            }
+        });
+    }
 
     handleChange = (event) => {
         this.setState({
@@ -304,18 +316,32 @@ class OrderPage extends Component {
                                     <MenuItem key={loc.locationID} value={loc.locationID}>{loc.name}</MenuItem>))}
                             </Select>
                         </Grid>
-                        <Grid className={classes.fieldContainer} item md={6} xs={12}>
+                        <Grid className={classes.fieldContainer} item md={3} xs={12}>
                             <DatePicker
                                 clearable
                                 variant='outlined'
                                 format="DD/MM/YYYY"
                                 name="locationDate"
                                 value={this.state.order.locationDate}
-                                disabled={loading}
+                                disabled={loading || this.state.order.isRecurrent}
                                 error={!!errors.locationDate}
                                 onChange={this.handleDateChange}
                                 shouldDisableDate={this.shouldDisableDate}
                                 fullWidth
+                            />
+                        </Grid>
+                        <Grid className={classes.fieldContainer} item md={3} xs={12}>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={this.state.order.isRecurrent}
+                                        onChange={this.handleIsRecurrent}
+                                        name="isReccurent"
+                                        color="primary"
+                                        disabled={loading}
+                                    />
+                                }
+                                label="Chaque semaine"
                             />
                         </Grid>
                         {this.state.order.breadList.map((breadOrder, index) => {
