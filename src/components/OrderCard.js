@@ -75,9 +75,9 @@ class OrderCard extends Component {
                     <Typography variant='body2'>
                         Lieu: {order.location.name}
                     </Typography>
-                    <Typography variant='body2'>
+                    {!order.isRecurrent && (<Typography variant='body2'>
                         Date: {dayjs(date.string).format('DD/MM/YYYY')}
-                    </Typography>
+                    </Typography>)}
                     <Typography variant='body2'>
                         Nombre de produits: {order.breadList.length}
                     </Typography>

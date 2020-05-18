@@ -38,7 +38,7 @@ class MyOrdersPage extends Component {
     }
 
     render() {
-        const {classes, data: {futureOrders, pastOrders, loading}} = this.props;
+        const {classes, data: {futureOrders, pastOrders, recurrentOrders, loading}} = this.props;
 
         const ordersToMarkup = (orders) => {
             if (orders.length === 0) {
@@ -60,10 +60,19 @@ class MyOrdersPage extends Component {
                 <Grid container className={classes.root}>
                     <Grid item sm/>
                     <Grid item md className={classes.allOrders}>
-                        <div className={classes.ordersContainer}>
-                            <Typography className={classes.ordersTitle} variant='h5'>Commandes en cours</Typography>
-                            {ordersToMarkup(futureOrders)}
-                        </div>
+                        {recurrentOrders.length !== 0 && (
+                            <div className={classes.ordersContainer}>
+                                <Typography className={classes.ordersTitle} variant='h5'>Commandes
+                                    hébdomadaires</Typography>
+                                {ordersToMarkup(recurrentOrders)}
+                            </div>
+                        )}
+                        {(futureOrders.length !== 0 || recurrentOrders.length === 0) && (
+                            <div className={classes.ordersContainer}>
+                                <Typography className={classes.ordersTitle} variant='h5'>Commandes en cours</Typography>
+                                {ordersToMarkup(futureOrders)}
+                            </div>
+                        )}
                         {pastOrders.length !== 0 && (
                             <div className={classes.ordersContainer}>
                                 <Typography className={classes.ordersTitle} variant='h5'>Commandes passées</Typography>
