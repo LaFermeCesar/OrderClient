@@ -18,9 +18,6 @@ class OrderSuccessDialog extends Component {
     };
 
     render() {
-        const linkMap = (s) => <a href="https://goo.gl/maps/vDCoMVvbhQ7wVbxm9" target='_blank'
-                                  rel="noopener noreferrer">{s}</a>
-
         return (
             <Dialog
                 open={this.props.UI.showOrderSuccess}
@@ -41,9 +38,7 @@ class OrderSuccessDialog extends Component {
                         }
 
                         <div>
-                            <b>INFO</b>: Nous sommes de retour au marché de Lausanne.
-                            Notre stand sera à la rue Saint-Laurent, entre la Coop City et la banque Clerc.
-                            ({linkMap('lien vers notre stand')})
+                            <b>INFO</b>: Nous sommes de retour aux marchés de Lausanne et Vevey.
                         </div>
                     </DialogContentText>
                 </DialogContent>
