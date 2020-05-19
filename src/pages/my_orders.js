@@ -76,7 +76,7 @@ class MyOrdersPage extends Component {
                         {pastOrders.length !== 0 && (
                             <div className={classes.ordersContainer}>
                                 <Typography className={classes.ordersTitle} variant='h5'>Commandes passées</Typography>
-                                {ordersToMarkup(pastOrders)}
+                                {ordersToMarkup(pastOrders.reverse())}
                             </div>
                         )}
                     </Grid>
