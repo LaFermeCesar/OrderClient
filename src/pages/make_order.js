@@ -159,7 +159,8 @@ class OrderPage extends Component {
         this.setState({
             order: {
                 ...this.state.order,
-                isRecurrent: !this.state.order.isRecurrent
+                isRecurrent: !this.state.order.isRecurrent,
+                locationDate: SwissDate.now().plus(1).next(this.state.order.location.daysOfWeek).string,
             }
         });
     }
