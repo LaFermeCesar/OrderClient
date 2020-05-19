@@ -39,8 +39,8 @@ const styles = {
         marginTop: 10,
     },
     progress: {
-        margin: '10px 0 10px 0'
-    }
+        margin: '10px 0 10px 0',
+    },
 };
 
 class LoginPage extends Component {
