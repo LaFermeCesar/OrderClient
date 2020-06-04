@@ -115,7 +115,8 @@ class OrderPage extends Component {
             levure: 'Tresses et cuchaules',
             'sans-gluten': 'Pains sans-gluten',
             'petit-pain': 'Petits pains',
-            autre: 'Autres'
+            miel: 'Miel',
+            autre: 'Autres',
         };
     };
 
