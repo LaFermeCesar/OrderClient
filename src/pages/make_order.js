@@ -205,35 +205,33 @@ class OrderPage extends Component {
 
     handleBreadChange = (event, breadIndex) => {
         const breadID = event.target.value;
-        if (!Object.keys(this.catToName).includes(breadID)) {
-            if (breadID !== '') {
-                const bread = this.props.data.idToBread[breadID];
-                this.setState({
-                    order: {
-                        ...this.state.order,
-                        breadList: this.state.order.breadList.map((b, i) => {
-                            if (i === breadIndex) {
-                                return {...b, breadID, bread, quantity: b.quantity}
-                            } else {
-                                return b
-                            }
-                        }),
-                    }
-                });
-            } else {
-                this.setState({
-                    order: {
-                        ...this.state.order,
-                        breadList: this.state.order.breadList.map((b, i) => {
-                            if (i === breadIndex) {
-                                return this.newBreadOrder()
-                            } else {
-                                return b
-                            }
-                        }),
-                    }
-                });
-            }
+        if (breadID !== '') {
+            const bread = this.props.data.idToBread[breadID];
+            this.setState({
+                order: {
+                    ...this.state.order,
+                    breadList: this.state.order.breadList.map((b, i) => {
+                        if (i === breadIndex) {
+                            return {...b, breadID, bread, quantity: b.quantity}
+                        } else {
+                            return b
+                        }
+                    }),
+                }
+            });
+        } else {
+            this.setState({
+                order: {
+                    ...this.state.order,
+                    breadList: this.state.order.breadList.map((b, i) => {
+                        if (i === breadIndex) {
+                            return this.newBreadOrder()
+                        } else {
+                            return b
+                        }
+                    }),
+                }
+            });
         }
     };
 
@@ -287,6 +285,8 @@ class OrderPage extends Component {
             .sort((l, r) => l.name.localeCompare(r.name));
         const locations = Object.values(idToLoc)
             .sort((l, r) => l.name.localeCompare(r.name));
+
+        const categories = Array.from(new Set(breads.map(b => b.cat)));
 
         const RedButton = styled(Button)({
             background: '#f44336',
@@ -364,10 +364,9 @@ class OrderPage extends Component {
                                             <MenuItem value="">
                                                 <em>Choisissez un produit</em>
                                             </MenuItem>
-
-                                            {Object.keys(this.catToName).map((cat) => [
+                                            {categories.map((cat) => [
                                                 <ListSubheader key={cat} value={cat} className={classes.breadCat}>
-                                                    {this.catToName[cat]}
+                                                    {this.catToName[cat] || cat}
                                                 </ListSubheader>,
                                                 breads
                                                     .filter(b => b.cat === cat)
