@@ -22,7 +22,7 @@ class OrderSuccessDialog extends Component {
             <Dialog
                 open={this.props.UI.showOrderSuccess}
             >
-                <DialogTitle>{this.props.UI.isOrderInTime ? `Commande réussie` : `Commande hors délai`}</DialogTitle>
+                <DialogTitle>Commande réussie</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         {this.props.UI.isOrderInTime ?
@@ -30,9 +30,9 @@ class OrderSuccessDialog extends Component {
                                 Votre commande a bien été enregistrée.
                             </div> :
                             <div>
-                                Votre commande a bien été enregistrée. Néanmoins, la production a déjà débuté.
-                                Nous ne pouvons donc pas garantir à 100% la disponibilité de tous les produits demandés.
-                                Nous ferons au mieux pour vous contacter en cas d'indisponibilité.
+                                Votre commande a bien été enregistrée.
+                                Néanmoins, la production a déjà débuté.
+                                En cas d'indisponibilité, nous ferons au mieux pour vous contacter.
                                 Merci de votre compréhension.
                             </div>
                         }
@@ -44,7 +44,7 @@ class OrderSuccessDialog extends Component {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleCloseAlert} color="primary" autoFocus>
-                        {this.props.UI.isOrderInTime ? `Merci` : `J'ai compris`}
+                        Merci
                     </Button>
                 </DialogActions>
             </Dialog>
