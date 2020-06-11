@@ -206,7 +206,7 @@ class OrderPage extends Component {
     handleBreadChange = (event, breadIndex) => {
         const breadID = event.target.value;
         if (breadID !== '') {
-            const bread = this.props.data.idToBread[breadID];
+            const bread = this.mapIDToBread(breadID);
             this.setState({
                 order: {
                     ...this.state.order,
