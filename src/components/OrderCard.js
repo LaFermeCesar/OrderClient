@@ -73,7 +73,7 @@ class OrderCard extends Component {
                         Commande n°{toNumber(order.orderID)}
                     </Typography>
                     <Typography variant='body2'>
-                        Lieu: {order.location.name}
+                        Lieu: {(order.location || {name: 'unknown'}).name}
                     </Typography>
                     <Typography variant='body2'>
                         Date: {order.isRecurrent ? 'Chaque semaine' : dayjs(date.string).format('DD/MM/YYYY')}
