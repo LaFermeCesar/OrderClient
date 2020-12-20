@@ -27,7 +27,7 @@ const styles = {
     },
 };
 
-const MARKET_DAYS = [6];
+const MARKET_DAYS = [3, 6]; // TODO: update this using market days in locations
 
 class AdminPage extends Component {
 

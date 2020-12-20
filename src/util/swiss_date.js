@@ -10,8 +10,8 @@ class SwissDate {
         } else {
             this._date = new Date();
         }
-        // add two hours because of GMT+2 (in switzerland, at the time of the writing)
-        this._date.setTime(this._date.getTime() + 2 * HOUR)
+        // add one/two hours because of GMT+1/2 (in switzerland, 1 hour, at the time of the writing)
+        this._date.setTime(this._date.getTime() + 1 * HOUR);
         // only the date matters
         this._date.setUTCHours(0, 0, 0, 0);
     }
