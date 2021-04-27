@@ -55,9 +55,9 @@ class AdminPage extends Component {
 
     shouldDisableDate = (date) => !MARKET_DAYS.includes(new SwissDate(date.toDate()).day);
 
-    handleDownload = (url, date, fname) => () => {
+    handleDownload = (url, date, fname, extension) => () => {
         const params = {date: date}
-        const filename = `${fname}_${dayjs(date).format('YYYY-MM-DD')}.xlsx`
+        const filename = `${fname}_${dayjs(date).format('YYYY-MM-DD')}.${extension}`
 
         this.setState({
             loading: true,
@@ -131,7 +131,7 @@ class AdminPage extends Component {
                         <Button variant='contained'
                                 color='primary'
                                 disabled={this.state.loading}
-                                onClick={this.handleDownload('/quantity_sheet', this.state.marketDate, 'quantites')}
+                                onClick={this.handleDownload('/quantity_sheet', this.state.marketDate, 'quantites', 'xlsx')}
                         >
                             Télécharger les quantités
                         </Button>
@@ -141,7 +141,7 @@ class AdminPage extends Component {
                         <Button variant='contained'
                                 color='primary'
                                 disabled={this.state.loading}
-                                onClick={this.handleDownload('/orders_sheet', this.state.marketDate, 'commandes')}
+                                onClick={this.handleDownload('/orders_sheet', this.state.marketDate, 'commandes', 'xlsx')}
                         >
                             Télécharger les commandes
                         </Button>
@@ -169,6 +169,17 @@ class AdminPage extends Component {
                             Modifier la commande
                         </Button>
                     </Grid>
+
+                    <Grid className={classes.fieldContainer} item sm={12} xs={12}>
+                        <Button variant='contained'
+                                color='primary'
+                                disabled={this.state.loading}
+                                onClick={this.handleDownload('/export_users', new SwissDate().string, 'users', 'json')}
+                        >
+                            Telecharger utilisateurs (json)
+                        </Button>
+                    </Grid>
+
                 </Grid>
                 {this.state.loading && (
                     <LinearProgress className={classes.progress}/>
