@@ -426,7 +426,7 @@ class OrderPage extends Component {
                                 </Typography>
                             )) || (this.state.order.breadList.find((_, i) => errors[`breadList_breadID_${i}`]) && (
                                 <Typography variant='body2' className={classes.customError}>
-                                    Le produit sélectionné est invalide
+                                    Le produit sélectionné n'est pas disponible en cette date ou pour ce marché
                                 </Typography>
                             )) || (this.state.order.breadList.find((_, i) => errors[`breadList_quantity_${i}`]) && (
                                 <Typography variant='body2' className={classes.customError}>
