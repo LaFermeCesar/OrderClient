@@ -38,7 +38,10 @@ class OrderSuccessDialog extends Component {
                         }
 
                         <div>
-                            <b>INFO</b>: Nous sommes de retour aux marchés de Lausanne et Vevey.
+                            <b>INFOS</b>:
+                            Les derniers marchés sont déplacés au vendredi 24 décembre.
+                            (reservations sous le samedi 25 décembre).
+                            Nous sommes de retour le 8 janvier 2022.
                         </div>
                     </DialogContentText>
                 </DialogContent>
