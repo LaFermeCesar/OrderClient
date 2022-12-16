@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
+
+import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
-import {orderSuccessDone} from "../redux/actions/uiAction";
-import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import PropTypes from "prop-types";
+import {connect} from "react-redux";
+import {orderSuccessDone} from "../redux/actions/uiAction";
+import {withRouter} from "react-router-dom";
 
 class OrderSuccessDialog extends Component {
 
@@ -37,12 +38,12 @@ class OrderSuccessDialog extends Component {
                             </div>
                         }
 
-                        <div>
+                        {/* <div>
                             <b>INFOS</b>:
                             Les derniers marchés sont déplacés au vendredi 24 décembre et la veille à Montagny
                             (reservations sous la date habituelle, soit le samedi 25 décembre pour les marchés).
                             Nous sommes de retour le 8 janvier 2022.
-                        </div>
+                        </div> */}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
