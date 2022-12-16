@@ -37,13 +37,6 @@ class OrderSuccessDialog extends Component {
                                 Merci de votre compréhension.
                             </div>
                         }
-
-                        {/* <div>
-                            <b>INFOS</b>:
-                            Les derniers marchés sont déplacés au vendredi 24 décembre et la veille à Montagny
-                            (reservations sous la date habituelle, soit le samedi 25 décembre pour les marchés).
-                            Nous sommes de retour le 8 janvier 2022.
-                        </div> */}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
